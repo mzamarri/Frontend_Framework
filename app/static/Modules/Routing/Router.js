@@ -1,5 +1,4 @@
-// import routes
-// import views
+import routes from "../../routes.js";
 
 
 const navigateTo = url => {
@@ -7,11 +6,7 @@ const navigateTo = url => {
     router();
 } 
 
-const router = async () => {
-    const routes = [
-        { path: "/", view: Dashboard }
-    ]
-
+export const router = async () => {
     const potentialMatches = routes.map(route => {
         return {
             route: route,
@@ -35,16 +30,4 @@ const router = async () => {
 
 }
 
-window.addEventListener("popstate", router);
-
-document.addEventListener("DOMContentLoaded", () => {
-    router();
-})
-
-document.body.addEventListener("click", (e) => {
-    if (e.target.matches("[data-link]")) {
-        e.preventDefault(); 
-        navigateTo(e.target.href);
-    }
-})
-
+export default navigateTo;
