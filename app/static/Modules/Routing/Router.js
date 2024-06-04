@@ -27,7 +27,7 @@ export const router = async () => {
     const view = new match.route.view();
 
     document.getElementById("app").innerHTML = await view.getHtml();
-
+    view.setEventListeners();
 }
 
 export default navigateTo;
