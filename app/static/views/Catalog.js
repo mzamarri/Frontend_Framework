@@ -20,7 +20,7 @@ export default class extends AbstractView {
                         Filter goes here
                     </div>
                 </div>
-                <div class="game-catalog">
+                <div class="game-catalog" id="game-catalog">
                     ${productListHTML}
                 </div>
                 <div class="pagination" id="catalog-pagination">
@@ -61,17 +61,18 @@ export default class extends AbstractView {
         return html; 
     }
 
-    selectPage() {
-        let pagination = document.getElementById("catalog-pagination");
-        pagination.addEventListener("click", (e) => {
-            e.preventDefault();
-            this.currentPage = parseInt(e.target.innerText);
-            pagination.querySelector("a.active").classList.remove("active");
-            e.target.classList.add("active");
-        });
+    selectPage(event) {
+        event.preventDefault();
+        if (event.target.tagName === "A") {
+            event.currentTarget.querySelector("a.active").classList.remove("active");
+            event.target.classList.add("active");
+            this.currentPage = parseInt(event.target.innerText);
+            document.getElementById("game-catalog").innerHTML = this.createProductList();
+        }
     }
 
     setEventListeners() {
-        this.selectPage();
+        let pagination = document.getElementById("catalog-pagination");
+        pagination.addEventListener("click", (e) => this.selectPage(e));
     }
 }

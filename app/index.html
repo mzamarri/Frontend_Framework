@@ -28,17 +28,16 @@
         </div>
     </body>
     <script>
-        // Catalog pagination
-        let root = document.documentElement;
-        let primaryBgColor = getComputedStyle(root).getPropertyValue('--primary-bg-color');
-        let secondaryBgColor = getComputedStyle(root).getPropertyValue('--secondary-bg-color');
-        let catalogPagination = document.getElementById('catalog-pagination');
-        // let paginationLinks = catalogPagination.getElementsByTagName('a');
+        let nav = document.querySelector("nav");
 
-        function selectPage(pageNum) {
-            console.log('Selected page: ' + pageNum);
+        function selectTab(event) {
+            if (event.target.tagName === "A") {
+                event.currentTarget.querySelector("a.active").classList.remove("active");
+                event.target.classList.add("active");
+            }
         }
 
+        nav.addEventListener("click", selectTab);
     </script>
     <script type="module" src="/static/index.js"></script>
 </html>

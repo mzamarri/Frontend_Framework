@@ -10,4 +10,8 @@ export default class {
     getHtml() {
         throw new Error("Abstract method!");
     }
+
+    setEventListeners() {
+        return;
+    }
 }
