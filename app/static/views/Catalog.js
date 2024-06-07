@@ -7,6 +7,7 @@ export default class extends AbstractView {
         super.setTitle("Catalog");
         this.items = itemList;
         this.currentPage = 1;
+        this.cart = [];
     }
 
     getHtml() {
@@ -41,7 +42,7 @@ export default class extends AbstractView {
                     <img src="${item.imageSrc}" alt="product photo">
                     <p>${item.description}</p>
                     <h3>$${item.price}</h3>
-                    <button>Add to Cart</button>
+                    <button >Add to Cart</button>
                 </div>
             `
         })
@@ -74,5 +75,12 @@ export default class extends AbstractView {
     setEventListeners() {
         let pagination = document.getElementById("catalog-pagination");
         pagination.addEventListener("click", (e) => this.selectPage(e));
+    }
+
+    addToCart(event) {
+        if (event.target.tagName === "BUTTON") {
+            let item = this.items.find(item => item.name === event.target.parentElement.querySelector("h3").innerText);
+            this.cart.push(item);
+        }
     }
 }

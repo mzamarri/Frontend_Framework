@@ -12,3 +12,9 @@ document.body.addEventListener("click", (e) => {
         navigateTo(e.target.href);
     }
 })
+
+export var cart = [];
+
+function addToCart(item) {
+    cart.push(item);
+}

@@ -3,7 +3,9 @@
     --secondary-bg-color: #F5F5F5;
     --accent-color: red;
     --primary-text-color: white;
-    --secondary-text-color: black; 
+    --secondary-text-color: black;
+    --cart-bg-color: white;
+    --box-shadow-color: #1f1f1f; 
 }
 
 * {
@@ -11,6 +13,11 @@
     padding: 0;
     box-sizing: border-box;;
     font-family: 'Poppins', sans-serif;
+}
+
+#app {
+    flex-grow: 1;
+    display: flex;
 }
 
 .container {
@@ -89,7 +96,6 @@ header nav ul li a.active {
 .catalog {
     width: 100%;
     height: 100%;
-    flex-grow: 1;
     display: flex;
     flex-direction: column;
 }
@@ -103,12 +109,13 @@ header nav ul li a.active {
 }
 
 .catalog .game-catalog {
+    height: 100%;
     padding: 30px;
     display: grid;
     grid-template-columns: repeat(auto-fill, 330px);
     grid-gap: 20px;
     justify-content: center;
-    height: 1200px;
+    height: 900px;
     overflow: auto;
 }
 
@@ -174,11 +181,95 @@ header nav ul li a.active {
 
 /* Cart */
 
-.cart {
-    width: 100%;
+.cart-container {
     flex-grow: 1;
-    height: 100%;
     display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+}
+
+.cart-container > h1 {
+    margin-bottom: 100px;
+    font-size: 48px;
+}
+
+.cart-container .cart {
+    width: 1400px;
+    box-sizing: content-box;
+    padding: 20px;
+    display: flex;
+    justify-content: space-between;
+}
+
+.cart-container .cart .cart-items {
+    width: 70%;
+    display: flex;
+    flex-direction: column;
+}
+
+.cart .cart-items .cart-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    padding: 10px;
+    border-bottom: solid 1px black;
+    height: 150px;
+}
+
+.cart-items .cart-item button {
+    font-size: 16px;
+    width: 32px;
+    height: 32px;
+    background-color: var(--accent-color);
+    color: var(--primary-text-color);
+    border: none;
+    border-radius: 50%;
+    text-align: center;
+    box-shadow: var(--box-shadow-color) 0px 0px 2px;
+}
+
+.cart-items .cart-item img {
+    width: 120px;
+    height: 120px;
+    background-color: white;
+} 
+
+.cart-items .cart-item input {
+    
+}
+
+.cart-container .cart .cart-summary {
+    width: 30%;
+    height: 400px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    padding: 30px;
+    margin-left: 60px;
+    background-color: var(--cart-bg-color);
+    box-shadow: var(--box-shadow-color) 0px 0px 2px;
+}
+
+.cart .cart-summary .purchase-summary {
+    margin-top: 45px;
+}
+
+.cart-summary .purchase-summary .cost-summary {
+    padding-bottom: 15px;
+    margin-bottom: 15px;
+    border-bottom: black solid 1px;
+}
+
+.cart .cart-summary button {
+    width: 100%;
+    margin-top: 20px;
+    padding: 15px;
+    background-color: var(--accent-color);
+    color: var(--primary-text-color);
+    border: none;
+    border-radius: 5px;
+    font-size: 16px;
 }
 
 /* Footer */
