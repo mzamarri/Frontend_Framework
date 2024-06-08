@@ -2,38 +2,19 @@ import AbstractView from "../Modules/Views/AbstractView.js";
 import { cart } from "../index.js";
 
 export default class extends AbstractView {
-    constructor(cart) {
+    constructor() {
         super();
         super.setTitle("Cart");
-        this.cart = cart;
     }
 
     getHtml() {
+        let cartHtml = this.getCart();
         return `
             <div class="cart-container">
                 <h1>Cart</h1>
                 <div class="cart" id="cart">
                     <div class="cart-items">
-                        <div class="cart-item">
-                            <button class="remove-item">X</button>
-                            <img src-"#" alt="product photo">
-                            <div class="product-description">
-                                <h3>Product Name</h3>
-                                <p>Product Description (Optional)</p>
-                            </div>
-                            <input type="number" id="quantity" name="quantity" min="0">
-                            <h3>$Price</h3>
-                        </div>
-                        <div class="cart-item">
-                        <button class="remove-item">X</button>
-                            <img src-"#" alt="product photo">
-                            <div class="product-description">
-                                <h3>Product Name</h3>
-                                <p>Product Description (Optional)</p>
-                            </div>
-                            <input type="number" id="quantity" name="quantity" min="0">
-                            <h3>$Price</h3>
-                        </div>
+                        ${cartHtml === "" ? "<h2>Your cart is empty</h2>" : cartHtml}
                     </div>
                     <div class="cart-summary">
                         <h1>Summary</h1>
@@ -53,20 +34,22 @@ export default class extends AbstractView {
 
     getCart() {
         let html = "";
-        this.cart.forEach(item => {
+        cart.getCart().forEach(item => {
             html += `
                 <div class="cart-item">
-                    <button class="remove-item">X</button>
-                    <img src="${item.imageSrc}" alt="product photo">
+                    <button class="remove-item" data-id=${item.item.id}>X</button>
+                    <img src="${item.item.imageSrc}" alt="product photo">
                     <div class="product-description">
-                        <h3>${item.name}</h3>
-                        <p>${item.description}</p>
+                        <h3>${item.item.name}</h3>
+                        <p>${item.item.description}</p>
                     </div>
-                    <input type="number" id="quantity" name="quantity" min="0">
-                    <h3>$${item.price}</h3>
+                    <input type="number" id="quantity" name="quantity" min="1" value="${item.amount}">
+                    <h3>$${item.item.price}</h3>
                 </div>
             `
         })
+        console.log("getCart html: " + html)
+        return html;
     }
 
     updateCart() {

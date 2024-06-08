@@ -1,8 +1,10 @@
 import navigateTo, { router } from "./Modules/Routing/Router.js";
+import ShoppingCart from "./ShoppingCart.js"
 
 window.addEventListener("popstate", router);
 
 document.addEventListener("DOMContentLoaded", () => {
+    cart.loadCartFromSessionStorage();
     router();
 })
 
@@ -13,8 +15,5 @@ document.body.addEventListener("click", (e) => {
     }
 })
 
-export var cart = [];
-
-function addToCart(item) {
-    cart.push(item);
-}
+const cart = new ShoppingCart();
+export { cart };
