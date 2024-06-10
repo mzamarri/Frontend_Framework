@@ -37,14 +37,14 @@ export default class extends AbstractView {
         let html = "";
         this.cart.getCart().forEach(item => {
             html += `
-                <div class="cart-item">
-                    <button class="remove-item" data-id=${item.item.id}>X</button>
+                <div class="cart-item" data-id=${item.id}>
+                    <button class="remove-item">X</button>
                     <img src="${item.item.imageSrc}" alt="product photo">
                     <div class="product-description">
                         <h3>${item.item.name}</h3>
                         <p>${item.item.description}</p>
                     </div>
-                    <div class="quantity" data-id=${item.item.id}>
+                    <div class="quantity">
                         <button class="decrement-quantity">-</button>
                         <input type="text" class="quantity-input" name="quantity" min="0" value="${item.amount}">
                         <button class="increment-quantity">+</button>
@@ -58,7 +58,8 @@ export default class extends AbstractView {
     }
 
     updateCart(event) {
-        let id = event.currentTarget.getAttribute("data-id");
+        let id = event.currentTarget.getAttribute("[data-id]");
+        console.log("Inside updateCart\nid: " + id);
         switch (event.target.tagName) {
             case "INPUT":
                 let amount = parseInt(event.target.value);
@@ -70,7 +71,7 @@ export default class extends AbstractView {
                 } else if (event.target.classList.contains("decrement-quantity")) {
                     this.cart.addAmount(id, -1);
                 } else if (event.target.classList.contains("remove-item")) {
-                this.cart.removeItem(id);
+                this.cart.removeFromCart(id);
                 }
                 break;
         }
@@ -78,6 +79,7 @@ export default class extends AbstractView {
 
     setEventListeners() {
         const cart = document.getElementById("cart");
+        console.log("cart: " + cart);
         cart.addEventListener("click", (event) => {
             console.log("event: " + event.target.tagName)
             this.updateCart(event);

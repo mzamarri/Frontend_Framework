@@ -4,22 +4,22 @@ export default class {
     }
 
     addToCart(item) {
-        this.cart.hasOwnProperty(item.id) ? this.cart[item.id].amount++ : this.cart[item.id] = {amount: 1, item: item};
+        this.cart.hasOwnProperty(item.id) ? this.cart[item.id].amount++ : this.cart[item.id] = {amount: 1, cartItem: item};
         this.saveCartToSessionStorage();
     }
 
-    removeFromCart(item) {
-        this.cart.hasOwnProperty(item.id) ? this.cart[item.id].amount-- : delete this.cart[item.id];
+    removeFromCart(id) {
+        this.cart.hasOwnProperty(id) ? this.cart[id].amount-- : delete this.cart[id];
         this.saveCartToSessionStorage();
     }
 
-    updateCart(id, addingAmount) {
-        this.cart[id].amount = amount;
+    updateCart(id, quantity) {
+        this.cart[id].amount = quantity;
         this.saveCartToSessionStorage();
     }
 
-    addAmount(id, amount) {
-        this.cart[id].amount += addingAmount;
+    addAmount(id, quantity) {
+        this.cart[id].amount += quantity;
         this.saveCartToSessionStorage();
     }
 
@@ -28,14 +28,6 @@ export default class {
         console.log("cart: " + cart);
         return cart;
     }
-
-    getCartTotal() {
-        return this.cart.reduce((total, item) => total + item.price, 0);
-    }
-
-    getCartQuantity() {
-        return this.cart.length;
-    } 
 
     saveCartToSessionStorage() {
         sessionStorage.setItem("cart", JSON.stringify(this.cart));
