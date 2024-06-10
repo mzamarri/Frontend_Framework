@@ -13,6 +13,16 @@ export default class {
         this.saveCartToSessionStorage();
     }
 
+    updateCart(id, addingAmount) {
+        this.cart[id].amount = amount;
+        this.saveCartToSessionStorage();
+    }
+
+    addAmount(id, amount) {
+        this.cart[id].amount += addingAmount;
+        this.saveCartToSessionStorage();
+    }
+
     getCart() {
         let cart = Object.values(this.cart);
         console.log("cart: " + cart);
@@ -25,13 +35,13 @@ export default class {
 
     getCartQuantity() {
         return this.cart.length;
-    }
+    } 
 
     saveCartToSessionStorage() {
         sessionStorage.setItem("cart", JSON.stringify(this.cart));
     }
 
     loadCartFromSessionStorage() {
-        this.cart = JSON.parse(sessionStorage.getItem("cart")) || [];
+        this.cart = JSON.parse(sessionStorage.getItem("cart")) || {};
     }
 }

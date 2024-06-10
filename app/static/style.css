@@ -6,6 +6,8 @@
     --secondary-text-color: black;
     --cart-bg-color: white;
     --box-shadow-color: #1f1f1f; 
+    --input-color: white;
+    --quanity-input-border-color: grey;
 }
 
 * {
@@ -217,7 +219,7 @@ header nav ul li a.active {
     height: 150px;
 }
 
-.cart-items .cart-item button {
+.cart-items .cart-item .remove-item {
     font-size: 16px;
     width: 32px;
     height: 32px;
@@ -229,14 +231,40 @@ header nav ul li a.active {
     box-shadow: var(--box-shadow-color) 0px 0px 2px;
 }
 
+.cart-items .cart-item .quantity {
+    background-color: var(--input-color);
+    border-radius: 5px;
+    display: flex;
+    align-items: center;
+    box-shadow: var(--box-shadow-color) 0px 0px 2px;
+}
+
+.cart-item .quantity .quantity-input {
+    width: 40px;
+    height: 40px;
+    text-align: center;
+    border: none;
+    border-left: solid 1px var(--quanity-input-border-color);
+    border-right: solid 1px var(--quanity-input-border-color);
+    margin: 5px 0;
+}
+
+.cart-item .quantity .decrement-quantity, .cart-item .quantity .increment-quantity {
+    width: 40px;
+    height: 40px;
+    background-color: var(--input-color);
+    border: none;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;
+    user-select: none;
+}
+
 .cart-items .cart-item img {
     width: 120px;
     height: 120px;
     background-color: white;
-} 
-
-.cart-items .cart-item input {
-    
 }
 
 .cart-container .cart .cart-summary {

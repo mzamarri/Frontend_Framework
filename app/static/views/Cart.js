@@ -5,6 +5,7 @@ export default class extends AbstractView {
     constructor() {
         super();
         super.setTitle("Cart");
+        this.cart = cart;
     }
 
     getHtml() {
@@ -34,7 +35,7 @@ export default class extends AbstractView {
 
     getCart() {
         let html = "";
-        cart.getCart().forEach(item => {
+        this.cart.getCart().forEach(item => {
             html += `
                 <div class="cart-item">
                     <button class="remove-item" data-id=${item.item.id}>X</button>
@@ -43,7 +44,11 @@ export default class extends AbstractView {
                         <h3>${item.item.name}</h3>
                         <p>${item.item.description}</p>
                     </div>
-                    <input type="number" id="quantity" name="quantity" min="1" value="${item.amount}">
+                    <div class="quantity" data-id=${item.item.id}>
+                        <button class="decrement-quantity">-</button>
+                        <input type="text" class="quantity-input" name="quantity" min="0" value="${item.amount}">
+                        <button class="increment-quantity">+</button>
+                    </div>
                     <h3>$${item.item.price}</h3>
                 </div>
             `
@@ -52,11 +57,30 @@ export default class extends AbstractView {
         return html;
     }
 
-    updateCart() {
-
+    updateCart(event) {
+        let id = event.currentTarget.getAttribute("data-id");
+        switch (event.target.tagName) {
+            case "INPUT":
+                let amount = parseInt(event.target.value);
+                this.cart.addToCart(id, amount);
+                break;
+            case "BUTTON":
+                if (event.target.classList.contains("increment-quantity")) {
+                    this.cart.addAmount(id, 1);
+                } else if (event.target.classList.contains("decrement-quantity")) {
+                    this.cart.addAmount(id, -1);
+                } else if (event.target.classList.contains("remove-item")) {
+                this.cart.removeItem(id);
+                }
+                break;
+        }
     }
 
     setEventListeners() {
-
+        const cart = document.getElementById("cart");
+        cart.addEventListener("click", (event) => {
+            console.log("event: " + event.target.tagName)
+            this.updateCart(event);
+        });
     }
 }
