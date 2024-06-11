@@ -1,0 +1,310 @@
+:root {
+    --primary-bg-color: #1F1F1F;
+    --secondary-bg-color: #F5F5F5;
+    --accent-color: red;
+    --primary-text-color: white;
+    --secondary-text-color: black;
+    --cart-bg-color: white;
+    --box-shadow-color: #1f1f1f; 
+    --input-color: white;
+    --quanity-input-border-color: grey;
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;;
+    font-family: 'Poppins', sans-serif;
+}
+
+#app {
+    flex-grow: 1;
+    display: flex;
+}
+
+.container {
+    width: 100%;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    background-color:var(--secondary-bg-color);
+}
+
+button {
+    cursor: pointer;
+}
+
+/* Header section */
+
+header {
+    background-color: var(--primary-bg-color);
+    height: 100px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 20px 80px;
+}
+
+/* Search bar */
+
+header .search-bar {
+    width: 40rem;
+    height: 40px;
+    display: flex;
+}
+
+header .search-bar #search {
+    flex-grow: 1;
+    padding: 8px;
+    border-radius: 4px;
+    margin-right: 10px;
+    border: none;
+}
+
+header .search-bar button {
+    color: var(--primary-text-color);
+    margin-left: 10px;
+    outline: none;
+    border: none;
+    background-color: var(--accent-color);
+    padding: 10px 20px;
+    border-radius: 15px;
+}
+
+/* Navbar */
+
+header nav ul {
+    display: flex;
+    list-style: none;
+}
+
+header nav ul li a {
+    text-decoration: none;
+    padding: 10px 15px;
+    color: var(--primary-text-color);
+    font-size: 20px;
+    font-weight: 500;
+}
+
+header nav ul li a.active {
+    color: var(--primary-text-color);
+    background-color: var(--accent-color);
+    border-radius: 5px;
+}
+
+/* Game Catalog */
+
+
+.catalog {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+}
+
+.catalog .result-filter {
+    padding: 15px 30px;
+    display: flex;
+    justify-content: space-between;
+    border-bottom: solid 2px gray;
+    margin: 0 10px;
+}
+
+.catalog .game-catalog {
+    height: 100%;
+    padding: 30px;
+    display: grid;
+    grid-template-columns: repeat(auto-fill, 330px);
+    grid-gap: 20px;
+    justify-content: center;
+    height: 900px;
+    overflow: auto;
+}
+
+.catalog .game-catalog .item {
+    height: 440px;
+    padding: 15px;
+    background-color: lightgray;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    /* align-items: center; */
+}
+
+.game-catalog .item img {
+    width: 300px;
+    height: 300px;
+    background-color: white;
+    align-self: center;
+}
+
+.game-catalog .item h3, .game-catalog .item p {
+    margin: 10px 0;
+}
+
+.game-catalog .item button {
+    padding: 10px 20px;
+    align-self: flex-start;
+}
+
+/* pagination */
+
+.pagination {
+    padding: 10px;
+    margin-top: auto;
+}
+
+.pagination ul {
+    list-style: none;
+    display: flex;
+    justify-content: center;
+}
+
+.pagination ul li {
+    margin: 0 5px;
+}
+
+.pagination ul li a {
+    width: 40px;
+    height: 40px;
+    text-decoration: none;
+    color: var(--primary-bg-color);
+    border-radius: 5px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.pagination ul li a.active {
+    background-color: var(--accent-color);
+    color: var(--primary-text-color);
+    border: none;
+}
+
+/* Cart */
+
+.cart-container {
+    flex-grow: 1;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+}
+
+.cart-container > h1 {
+    margin-bottom: 100px;
+    font-size: 48px;
+}
+
+.cart-container .cart {
+    width: 1400px;
+    box-sizing: content-box;
+    padding: 20px;
+    display: flex;
+    justify-content: space-between;
+}
+
+.cart-container .cart .cart-items {
+    width: 70%;
+    display: flex;
+    flex-direction: column;
+}
+
+.cart .cart-items .cart-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    padding: 10px;
+    border-bottom: solid 1px black;
+    height: 150px;
+}
+
+.cart-items .cart-item .remove-item {
+    font-size: 16px;
+    width: 32px;
+    height: 32px;
+    background-color: var(--accent-color);
+    color: var(--primary-text-color);
+    border: none;
+    border-radius: 50%;
+    text-align: center;
+    box-shadow: var(--box-shadow-color) 0px 0px 2px;
+}
+
+.cart-items .cart-item .quantity {
+    background-color: var(--input-color);
+    border-radius: 5px;
+    display: flex;
+    align-items: center;
+    box-shadow: var(--box-shadow-color) 0px 0px 2px;
+}
+
+.cart-item .quantity .quantity-input {
+    width: 40px;
+    height: 40px;
+    text-align: center;
+    border: none;
+    border-left: solid 1px var(--quanity-input-border-color);
+    border-right: solid 1px var(--quanity-input-border-color);
+    margin: 5px 0;
+}
+
+.cart-item .quantity .decrement-quantity, .cart-item .quantity .increment-quantity {
+    width: 40px;
+    height: 40px;
+    background-color: var(--input-color);
+    border: none;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;
+    user-select: none;
+}
+
+.cart-items .cart-item img {
+    width: 120px;
+    height: 120px;
+    background-color: white;
+}
+
+.cart-container .cart .cart-summary {
+    width: 30%;
+    height: 400px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    padding: 30px;
+    margin-left: 60px;
+    background-color: var(--cart-bg-color);
+    box-shadow: var(--box-shadow-color) 0px 0px 2px;
+}
+
+.cart .cart-summary .purchase-summary {
+    margin-top: 45px;
+}
+
+.cart-summary .purchase-summary .cost-summary {
+    padding-bottom: 15px;
+    margin-bottom: 15px;
+    border-bottom: black solid 1px;
+}
+
+.cart .cart-summary button {
+    width: 100%;
+    margin-top: 20px;
+    padding: 15px;
+    background-color: var(--accent-color);
+    color: var(--primary-text-color);
+    border: none;
+    border-radius: 5px;
+    font-size: 16px;
+}
+
+/* Footer */
+
+footer {
+    width: 100%;
+    height: 120px;
+    background-color: var(--primary-bg-color);
+    /* visibility: hidden; */
+}

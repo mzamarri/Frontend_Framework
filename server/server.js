@@ -1,9 +1,9 @@
 const express = require('express');
 const path = require('path');
 
-const app = express();
+const DEVMODE =  require("./config.json").devMode;
 
-console.log("Static files are served from: ", path.resolve(__dirname, "../app/static/"));
+const app = express();
 
 app.use("/static", express.static(path.resolve(__dirname, "../app/static/")));
 
@@ -12,5 +12,6 @@ app.get("/*", (req, res) => {
 })
 
 app.listen(4600, () => {
-    console.log("Server is running on port 4600")
+    console.log("Server is running on port 4600");
+    console.log("DEVMODE: ", DEVMODE);
 });

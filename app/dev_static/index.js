@@ -1,6 +1,5 @@
 import navigateTo, { router } from "./Modules/Routing/Router.js";
 import ShoppingCart from "./ShoppingCart.mjs"
-import SessionStorageLogger from "./ClientStorageLogger.js";
 
 window.addEventListener("popstate", router);
 
