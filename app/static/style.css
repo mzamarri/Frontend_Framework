@@ -8,6 +8,8 @@
     --box-shadow-color: #1f1f1f; 
     --input-color: white;
     --quanity-input-border-color: grey;
+    --order-history-bg-color-1: #a8eb5b;
+    --order-history-bg-color-2: #FFFFFF;
 }
 
 * {
@@ -298,6 +300,44 @@ header nav ul li a.active {
     border: none;
     border-radius: 5px;
     font-size: 16px;
+}
+
+/* Order History */
+
+.order-history-container {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    padding: 20px;
+}
+
+.order-history-container h1 {
+    margin-bottom: 30px;
+}
+
+.order-history-container .order-history {
+    display: flex;
+    flex-direction: column;
+    background-color: var(--cart-bg-color);
+    border: solid 1px black;
+}
+
+.order-history-container .order-history .order {
+    border: solid 1px black;
+    padding: 15px;
+}
+
+.order-history-container .order-history .order:nth-child(odd) {
+    background-color: var(--order-history-bg-color-1);
+}
+
+.order-history-container .order-history .order:nth-child(even) {
+    background-color: var(--order-history-bg-color-2);
+}
+
+.order-history .order .order-items {
+    display: none;
 }
 
 /* Footer */

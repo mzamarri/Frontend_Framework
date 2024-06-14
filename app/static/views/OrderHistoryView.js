@@ -4,11 +4,94 @@ export default class extends AbstractView {
     constructor() {
         super();
         super.setTitle("Order History");
+        this.orderHistory = [
+            {
+                id: "123",
+                date: "01/01/2021",
+                totalPrice: 100.00,
+                items: {
+                    "1": {
+                        amount: 1,
+                        item: {
+                            name: "Product 1",
+                            price: 50.00,
+                            imageSrc: "#",
+                            description: "Product 1 description"
+                        }
+                    },
+                    "2": {
+                        amount: 2,
+                        item: {
+                            name: "Product 2",
+                            price: 25.00,
+                            imageSrc: "#",
+                            description: "Product 2 description"
+                        }
+                    }
+                }
+            }, 
+            {
+                id: "456",
+                date: "01/02/2021",
+                totalPrice: 75.00,
+                items: {
+                    "3": {
+                        amount: 1,
+                        item: {
+                            name: "Product 3",
+                            price: 75.00,
+                            imageSrc: "#",
+                            description: "Product 3 description"
+                        }
+                    }
+                }
+            },
+            {
+                id: "657",
+                date: "07/04/2023",
+                totalPrice: 75.00,
+                items: {
+                    "3": {
+                        amount: 1,
+                        item: {
+                            name: "Product 3",
+                            price: 75.00,
+                            imageSrc: "#",
+                            description: "Product 3 description"
+                        }
+                    }
+                }
+            }
+        ];;
     }
 
     getHtml() {
+        // const orderHistory = this.loadOrderHistory();
+        let orderHistory = this.orderHistory;
         return `
-            <h1>Order History</h1>
+            <div class="order-history-container">
+                <h1>Order History</h1>
+                <div class="order-history">
+                    ${orderHistory.map(order => `
+                            <div class="order">
+                                <h2>Order ID: ${order.id}</h2>
+                                <h3>Order Date: ${order.date}</h3>
+                                <h3>Order Total: $${order.totalPrice}</h3>
+                                <div class="order-items">
+                                    ${Object.entries(order.items).map(([id, orderItem]) => `
+                                        <div class="order-item" data-id="${id}">
+                                            <img src="${orderItem.item.imageSrc}" alt="product photo">
+                                            <h3>${orderItem.item.name}</h3>
+                                            <h3>$${orderItem.item.price}</h3>
+                                            <h3>Quantity: ${orderItem.amount}</h3>
+                                            <h3>Subtotal: $${orderItem.item.price * orderItem.amount}</h3>
+                                        </div>
+                                    `)}
+                                </div>
+                            </div>
+                        `).join("")}
+                </div>
+            </div>
         `
     }
 }
