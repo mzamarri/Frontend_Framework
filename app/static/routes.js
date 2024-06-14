@@ -1,6 +1,6 @@
-import Catalog from "./views/Catalog.js";
-import Cart from "./views/Cart.js";
-import OrderHistory from "./views/OrderHistory.js";
+import Catalog from "./views/CatalogView.js";
+import Cart from "./views/CartView.js";
+import OrderHistory from "./views/OrderHistoryView.js";
 
 export default  [
     {path: "/", view: Catalog},

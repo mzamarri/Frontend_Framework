@@ -9,8 +9,10 @@ export default class {
     }
 
     removeFromCart(id) {
-        this.cart.hasOwnProperty(id) ? this.cart[id].amount-- : delete this.cart[id];
-        this.saveCartToSessionStorage();
+        if (id in this.cart) {
+            delete this.cart[id];
+            this.saveCartToSessionStorage();
+        }
     }
 
     updateCart(id, quantity) {
@@ -19,13 +21,16 @@ export default class {
     }
 
     addAmount(id, quantity) {
-        this.cart[id].amount += quantity;
-        this.saveCartToSessionStorage();
+        if (this.cart[id].amount + quantity > 0) {
+            this.cart[id].amount += quantity;
+            this.saveCartToSessionStorage();
+        } else if (this.cart[id].amount + quantity <= 0) {
+            this.removeFromCart(id);
+        }
     }
 
     getCart() {
-        let cart = Object.values(this.cart);
-        console.log("cart: " + cart);
+        let cart = Object.entries(this.cart);
         return cart;
     }
 
@@ -35,5 +40,5 @@ export default class {
 
     loadCartFromSessionStorage() {
         this.cart = JSON.parse(sessionStorage.getItem("cart")) || {};
-    }
+    } 
 }
