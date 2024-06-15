@@ -46,6 +46,7 @@ export default class extends AbstractView {
                 </div>
             `
         })
+        fetch("/cart");
         return html;
     }
 

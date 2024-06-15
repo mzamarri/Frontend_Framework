@@ -16,11 +16,12 @@ export default class extends AbstractView {
     }
 
     getHtml() {
-        let cartHtml = this.getCart();
+        const cartHtml = this.getCart();
+        const hostUrl = window.location.origin;
         return `
             <div class="cart-container">
                 <h1>Cart</h1>
-                <div class="cart" id="cart">
+                <form class="cart" id="cart" action="${hostUrl}/checkout/" method="post">
                     <div class="cart-items" id="cart-items">
                         ${cartHtml}
                     </div>
@@ -33,19 +34,21 @@ export default class extends AbstractView {
                             </div>
                             <h3>Total: $Price</h3>
                         </div>
-                        <button id="checkout">Checkout</button>
+                        <button type="submit" id="checkout">Checkout</button>
                     </div>
-                </div>
+                </form>
             </div>
         `
     }
 
-    getCart() {
+    async getCart() {
         let html = "";
+        let cartUrl = window.location.origin + "/cart";
+        const response = await fetch("/cat");
         cart.getCart().forEach(([id, item]) => {
             html += `
                 <div class="cart-item" data-id=${id}>
-                    <button class="remove-item">X</button>
+                    <button class="remove-item" >X</button>
                     <img src="${item.cartItem.imageSrc}" alt="product photo">
                     <div class="product-description">
                         <h3>${item.cartItem.name}</h3>
@@ -94,6 +97,8 @@ export default class extends AbstractView {
         }
     }
 
+
+
     setEventListeners() {
         const cartItems = document.getElementById("cart").querySelector(".cart-items").querySelectorAll(".cart-item");
         const checkout = document.getElementById("checkout");
@@ -106,7 +111,6 @@ export default class extends AbstractView {
             alert("Thank you for your purchase!");
             cart.cart = {};
             cart.saveCartToSessionStorage();
-            this.render(document.getElementById(this.cartItemsId), this.getCart());
         });
     }
 }

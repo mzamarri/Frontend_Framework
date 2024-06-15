@@ -92,7 +92,7 @@ export default class extends AbstractView {
                                     ${Object.entries(order.items).map(([id, orderItem]) => `
                                         <div class="item" data-id="${id}">
                                             <img src="${orderItem.item.imageSrc}" alt="product photo">
-                                            <h3>${orderItem.item.name}</h3>
+                                            <a href="#">${orderItem.item.name}</a>
                                             <h3>$${orderItem.item.price}</h3>
                                             <h3>Quantity: ${orderItem.amount}</h3>
                                             <h3>Subtotal: $${orderItem.item.price * orderItem.amount}</h3>

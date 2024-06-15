@@ -15,7 +15,7 @@
                 </div>
                 <nav>
                     <ul>
-                        <li><a class="active" href="/" data-link>Catalog</a></li>
+                        <li><a href="/" data-link>Catalog</a></li>
                         <li><a href="/cart" data-link>Cart</a></li>
                         <li><a href="/orderhistory" data-link>Order History</a></li>
                     </ul>
@@ -38,6 +38,15 @@
         }
 
         nav.addEventListener("click", selectTab);
+        document.addEventListener("DOMContentLoaded", () => {
+            const currentPath = window.location.pathname;
+            const links = document.querySelectorAll("nav a");
+            links.forEach(link => {
+                if (link.getAttribute("href") === currentPath) {
+                    link.classList.add("active");
+                }
+            });
+        })
     </script>
     <script type="module" src="/static/index.js"></script>
 </html>
