@@ -7,24 +7,28 @@ const app = express();
 
 app.use("/static", express.static(path.resolve(__dirname, "../app/static/")));
 
-app.get("/*", (req, res) => {
-    res.sendFile(path.resolve(__dirname, "../app/index.html"));
-})
-
 app.post("/checkout", (req, res) => {
     console.log("/checkout POST");
     res.redirect("/");
 })
 
-app.get("/cart", (req, res) => {
-    console.log("/cart GET");
-    res.redirect("/");
-});
+app.get("/cart/get-items", (req, res) => {
+    res.send({
+        "3": {
+            amount: 1,
+            cartItem: {
+                name: "Product 3",
+                price: 75.00,
+                imageSrc: "#",
+                description: "Product 3 description"
+            }
+        }
+    });
+})
 
-app.post("/cart", (req, res) => {
-    console.log("/cart POST");
-    res.redirect("/");
-});
+app.get("/*", (req, res) => {
+    res.sendFile(path.resolve(__dirname, "../app/index.html"));
+})
 
 app.listen(4600, () => {
     console.log("Server is running on port 4600");

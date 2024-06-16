@@ -15,9 +15,13 @@ export default class extends AbstractView {
         this.setEventListeners();
     }
 
-    getHtml() {
-        const cartHtml = this.getCart();
+    async getHtml() {
         const hostUrl = window.location.origin;
+        const cart = await fetch(hostUrl + "/cart/get-items")
+            .then(async response => await response.json())
+            .catch(error => console.error(error));
+        console.log("cart: ", cart);
+        const cartHtml = this.getCart(cart);
         return `
             <div class="cart-container">
                 <h1>Cart</h1>
@@ -41,11 +45,9 @@ export default class extends AbstractView {
         `
     }
 
-    async getCart() {
+    getCart(items) {
         let html = "";
-        let cartUrl = window.location.origin + "/cart";
-        const response = await fetch("/cat");
-        cart.getCart().forEach(([id, item]) => {
+        Object.entries(items).forEach(([id, item]) => {
             html += `
                 <div class="cart-item" data-id=${id}>
                     <button class="remove-item" >X</button>
@@ -66,7 +68,7 @@ export default class extends AbstractView {
         return html !== "" ? html : "<h2>Your cart is empty</h2>";
     }
 
-    updateCart(event) {
+    async updateCart(event) {
         let domObj, id = event.currentTarget.getAttribute("data-id");
         switch (event.target.tagName) {
             case "INPUT":{
@@ -77,7 +79,7 @@ export default class extends AbstractView {
                 } else {
                     this.cart.updateCart(id, amount);
                 }
-                this.render(domObj, this.getCart());
+                this.render(domObj, await this.getCart());
                 break;
             }
             case "BUTTON": {
@@ -92,7 +94,7 @@ export default class extends AbstractView {
                         cart.addAmount(id, -1);
                     }
                     }
-                cart.cart.hasOwnProperty(id) ? itemAmount.value = cart.cart[id].amount : this.render(domObj, this.getCart());
+                cart.cart.hasOwnProperty(id) ? itemAmount.value = cart.cart[id].amount : this.render(domObj, await this.getCart());
             }
         }
     }

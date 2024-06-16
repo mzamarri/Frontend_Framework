@@ -1,5 +1,6 @@
 import navigateTo, { router } from "./Modules/Routing/Router.js";
 import ShoppingCart from "./ShoppingCart.mjs";
+import testBench from "./testBench.js";
 
 window.addEventListener("popstate", router);
 
@@ -17,3 +18,7 @@ document.body.addEventListener("click", (e) => {
 
 const cart = new ShoppingCart();
 export { cart };
+
+const url = window.location.origin + "/cart/get-items";
+
+testBench(url);

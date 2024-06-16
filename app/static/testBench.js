@@ -1,0 +1,1 @@
+export default async cartUrl => await fetch(cartUrl);
