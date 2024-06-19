@@ -5,25 +5,23 @@ exports = module.exports = class {
 
     addToCart(item) {
         this.cart.hasOwnProperty(item.id) ? this.cart[item.id].amount++ : this.cart[item.id] = {amount: 1, cartItem: item};
-        this.saveCartToSessionStorage();
     }
 
     removeFromCart(id) {
         if (id in this.cart) {
             delete this.cart[id];
-            this.saveCartToSessionStorage();
+            return;
         }
+        console.log("Item not in cart");
     }
 
     updateCart(id, quantity) {
         this.cart[id].amount = quantity;
-        this.saveCartToSessionStorage();
     }
 
     addAmount(id, quantity) {
         if (this.cart[id].amount + quantity > 0) {
             this.cart[id].amount += quantity;
-            this.saveCartToSessionStorage();
         } else if (this.cart[id].amount + quantity <= 0) {
             this.removeFromCart(id);
         }
@@ -34,11 +32,11 @@ exports = module.exports = class {
         return cart;
     }
 
-    saveCartToSessionStorage() {
+    saveCartToDatabase() {
         sessionStorage.setItem("cart", JSON.stringify(this.cart));
     }
 
-    loadCartFromSessionStorage() {
+    loadCartFromDatabase() {
         this.cart = JSON.parse(sessionStorage.getItem("cart")) || {};
     } 
 }

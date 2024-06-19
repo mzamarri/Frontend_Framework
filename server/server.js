@@ -1,6 +1,6 @@
 const express = require('express');
 const path = require('path');
-const Cart = require("./ShoppingCart.js");
+const Cart = require("./Cart.js");
 const OrderHistory = require("./OrderHistory.js");
 
 const app = express();
@@ -13,6 +13,7 @@ app.post("/checkout", (req, res) => {
 })
 
 app.get("/cart/get-items", (req, res) => {
+    console.log("/cart/get-items GET");
     res.send({
         "3": {
             amount: 1,

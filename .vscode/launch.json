@@ -23,6 +23,12 @@
             "name": "Launch Chrome against localhost",
             "url": "http://localhost:4600/",
             "webRoot": "${workspaceFolder}/app/static/"
+        },
+    ],
+    "compounds": [
+        {
+            "name": "Launch Chrome and Start Server",
+            "configurations": ["Start Server", "Launch Chrome against localhost"]
         }
     ]
 }
