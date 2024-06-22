@@ -1,16 +1,6 @@
 const Catalog = require("../../server/Catalog");
-const { Pool, Client } = require("pg");
 const itemList = require("../../server/productList");
 const queryDatabase = require("../../server/queryDatabase");
-require("dotenv").config();
-
-const config = {
-    user: process.env.PG_USER,
-    host: process.env.PG_HOST,
-    database: process.env.PG_DATABASE,
-    password: process.env.PG_PASSWORD,
-    port: process.env.PG_PORT,
-}
 
 describe("Catalog Update Method", () => {
     const deleteQuery = `DELETE FROM catalog`;
@@ -34,13 +24,24 @@ describe("Catalog Update Method", () => {
         const updatedItems = itemList.slice(0, 3).map(item => ({
             ...item,
             name: item.name + "Testing update method",
-            price: 100.00,
+            price: 100.00 * 1.1,
             imageSrc: "test",
             description: "Testing update method"
         }));
 
-        const selectQuery = `SELECT * FROM catalog`;
-        const expectedResults = await queryDatabase(selectQuery); 
+        const selectQuery = `
+            SELECT * FROM catalog
+            WHERE catalog_id IN (${updatedItems.map(item => `'${item.catalogId}'`).join(", ")})
+        `;
+        const updatedResults = await queryDatabase(selectQuery);
+        
+        const updatedResultsFormatted = initialResults.rows.map(row => ({
+            catalogId: row.catalog_id,
+            name: row.name,
+            price: row.price,
+            imageSrc: row.image_src,
+            description: row.description
+        }));
     
         const testQuery = `UPDATE catalog SET name=${itemList.name}`
         const result = await client.query(query);
