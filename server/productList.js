@@ -13,7 +13,7 @@ function createItem(id, name, price, image, description) {
 const items = (() => {
     let tempItems = [];
     for (let i = 1; i <= 15; i++) {
-        tempItems.push(createItem(i, `Item ${i}`, i*10, "#", `This is item ${i}`));
+        tempItems.push(createItem(`${i}`, `Item ${i}`, i*10, "#", `This is item ${i}`));
     }
     return tempItems;
 })()

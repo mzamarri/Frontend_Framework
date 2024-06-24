@@ -4,7 +4,7 @@ require('dotenv').config();
 const config = {
     user: process.env.PG_USER,
     host: process.env.PG_HOST,
-    database: process.env.PG_DATABASE,
+    database: process.env.PG_DATABASE_TEST,
     password: process.env.PG_PASSWORD,
     port: process.env.PG_PORT,
 }

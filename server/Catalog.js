@@ -20,12 +20,16 @@ exports = module.exports = class {
     }
 
     async updateCatalog(itemList) {
-        const query = `UPDATE catalog SET name = '${itemList.name}', price = ${itemList.price}, image_src = '${itemList.imageSrc}', description = '${itemList.description}'
-        WHERE catalog_id IN (${itemList.map(item => `'${item.catalogId}'`).join(", ")})`
+        const query = `
+            UPDATE catalog SET name=updated_catalog.name, price=updated_catalog.price, image_src=updated_catalog.image_src, description=updated_catalog.description
+            FROM (
+                VALUES ${itemList.map(item => `('${item.catalogId}', '${item.name}', ${item.price}, '${item.imageSrc}', '${item.description}')`).join(",\n")}
+            ) AS updated_catalog(catalog_id, name, price, image_src, description)
+            WHERE catalog.catalog_id=updated_catalog.catalog_id
+        `
         await queryDatabase(query)
-        .then(console.log("Successfully updated items in catalog"))
+        .then(() => console.log("Successfully updated items in catalog"))
         .catch(err => console.error(err.stack)); 
-
     }
 
     async getCatalog(offset=0) {

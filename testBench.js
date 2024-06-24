@@ -1,13 +1,13 @@
-const Catalog = require('./Catalog.js');
-const itemList = require('./productList.js');
-const queryDatabase = require('./queryDatabase.js');
+const Catalog = require('./server/Catalog.js');
+const itemList = require('./server/productList.js');
+const queryDatabase = require('./server/queryDatabase.js');
 
 const addToCatalog = async () => {
     const deleteRecordsQuery = `DELETE FROM catalog`
     await queryDatabase(deleteRecordsQuery);
 
     const catalog = new Catalog();
-    await catalog.addToCatalog(itemList);
+    await catalog.addToCatalog(itemList.splice(0, 10));
 }
 
 const getCatalog = async () => {
@@ -23,7 +23,4 @@ const removeFromCatalog = async () => {
 
 (async () => {
     await addToCatalog();
-    await getCatalog();
-    await removeFromCatalog();
-    await getCatalog();
 })()
