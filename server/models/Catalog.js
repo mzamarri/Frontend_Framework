@@ -1,11 +1,13 @@
-const queryDatabase = require('./queryDatabase.js');
+const queryDatabase = require('../queryDatabase.js');
 
 exports = module.exports = class {
     async addToCatalog(itemList) {
-        const query = `INSERT INTO catalog (catalog_id, name, price, image_src, description)
-        VALUES ${itemList.map(item => {
-            return `('${item.catalogId}', '${item.name}', ${item.price}, '${item.imageSrc}', '${item.description}')`
-        }).join(",\n")}`
+        const query = `
+            INSERT INTO catalog (catalog_id, name, price, image_src, description)
+            VALUES ${itemList.map(item => {
+                return `('${item.catalogId}', '${item.name}', ${item.price}, '${item.imageSrc}', '${item.description}')`
+            }).join(",\n")}
+        `
         
         await queryDatabase(query)
         .then(console.log("Successfully added items to catalog"))

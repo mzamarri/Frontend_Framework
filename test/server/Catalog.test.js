@@ -4,11 +4,11 @@ const queryDatabase = require("../../server/queryDatabase");
 
 const deleteQuery = `DELETE FROM catalog`;
 const setupTableQuery = `
-INSERT INTO catalog (catalog_id, name, price, image_src, description)
-VALUES ${itemList.map(item => {
-    return `( '${item.catalogId}', '${item.name}', ${item.price}, '${item.imageSrc}', '${item.description}')`
-}).join(", ")}
-RETURNING * 
+    INSERT INTO catalog (catalog_id, name, price, image_src, description)
+    VALUES ${itemList.map(item => {
+        return `( '${item.catalogId}', '${item.name}', ${item.price}, '${item.imageSrc}', '${item.description}')`
+    }).join(", ")}
+    RETURNING *
 `
 
 beforeAll(() => console.log("itemList: ", itemList));
