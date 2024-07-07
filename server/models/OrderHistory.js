@@ -20,15 +20,15 @@ exports = module.exports = class {
     * }
     */
 
-    addToOrderHistory(order) {
+    async addToOrderHistory(order) {
         
     }
 
-    removeFromOrderHistory(order) {
+    async removeFromOrderHistory(order) {
 
     }
 
-    updateOrderHistory(order) {
+    async updateOrderHistory(order) {
 
     }
 
@@ -39,6 +39,6 @@ exports = module.exports = class {
             console.log(res);
             return res;
         })
-        .catch(err => console.log(err));
+        .catch(err => console.error(err));
     }
 }
