@@ -1,11 +1,19 @@
-const queryDatabase = require('./server/queryDatabase.js');
-const OrderHistory = require('./server/models/OrderHistory.js')
+const OrderHistory = require('./server/models/OrderHistory');
+const Catalog = require('./server/models/Catalog');
+const catalogItems = require('./server/productList');
 
-const query = `SELECT * FROM order_history`;
 const orderHistory = new OrderHistory();
+const catalog = new Catalog();
 
 (async () => {
-    const res = await orderHistory.getOrderHistory();
-    console.log(res.row);
-    res.rows.forEach(item => console.log(item));
+    console.time("testBench");
+    await catalog.addToCatalog(catalogItems);
+    const orders = await require('./server/orderHistoryList');
+    // console.log("orders: ", orders);
+    for (const order of orders) {
+        // console.log("order: ", order);
+        await orderHistory.addToOrderHistory(order);
+    }
+    // console.log("Order History: ", (await orderHistory.getOrderHistory(10)).rows);
+    console.timeEnd("testBench");
 })()

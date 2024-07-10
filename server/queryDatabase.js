@@ -1,5 +1,6 @@
 const { Pool, Client } = require('pg');
-require('dotenv').config();
+const path = require('path');
+require('dotenv').config({path: path.join(__dirname, "../.env")});
 
 const config = {
     user: process.env.PG_USER,
@@ -14,15 +15,14 @@ const pool = new Pool({
     allowExitOnIdle: true
 });
 
-const client = new Client({
-    ...config
-})
-
 exports = module.exports = async function (query, isPool=true) {
     if (!isPool) {
+        const client = new Client({
+            ...config
+        })
         await client.connect();
         const res = await client.query(query);
-        client.end();
+        await client.end();
         return res;
     }
     const res = await pool.query(query);

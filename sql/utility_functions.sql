@@ -22,6 +22,28 @@ BEGIN
 END
 $$ LANGUAGE plpgsql;
 
-CREATE OR REPLACE PROCEDURE add_to_order_history(address varchar(255), total_price float) AS $$
-    INSERT INTO orders ("address", "total_price") VALUES (address, total_price);
-$$ LANGUAGE SQL;
+CREATE TYPE item_amount AS (
+    catalog_id int,
+    quantity int
+);
+
+CREATE TYPE order_info AS (
+    total_price float,
+    item_lists item_amount[]
+);
+
+CREATE OR REPLACE PROCEDURE add_to_order_history(_order order_info) AS $$
+DECLARE
+    item item_amount;
+    _order_id int;
+BEGIN
+    INSERT INTO orders (total_price) VALUES (_order.total_price)
+    RETURNING order_id INTO _order_id;
+    RAISE NOTICE 'order_id: %', _order_id;
+    RAISE NOTICE 'total price: %', _order.total_price;
+    FOREACH item IN ARRAY _order.item_lists LOOP
+        RAISE NOTICE 'item id: %', item.catalog_id;
+        RAISE NOTICE 'item amount: %', item.quantity;
+        INSERT INTO order_items VALUES (_order_id, item.catalog_id, item.quantity);
+    END LOOP;
+END $$ LANGUAGE plpgsql;

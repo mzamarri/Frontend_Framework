@@ -1,4 +1,4 @@
-const Catalog = require("../../server/Catalog");
+const Catalog = require('../../server/models/Catalog');
 const itemList = require("../../server/productList");
 const queryDatabase = require("../../server/queryDatabase");
 

@@ -4,4 +4,4 @@ set PGDATABASE=test
 
 psql -c "CALL clear_tables();"
 psql -f create_tables.sql
-psql -f populate_tables.sql
+node ../testBench.js

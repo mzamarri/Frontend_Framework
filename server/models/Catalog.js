@@ -1,11 +1,11 @@
-const queryDatabase = require('../queryDatabase.js');
+const queryDatabase = require('../queryDatabase');
 
 exports = module.exports = class {
     async addToCatalog(itemList) {
         const query = `
-            INSERT INTO catalog (catalog_id, name, price, image_src, description)
+            INSERT INTO catalog (name, price, image_src, description)
             VALUES ${itemList.map(item => {
-                return `('${item.catalogId}', '${item.name}', ${item.price}, '${item.imageSrc}', '${item.description}')`
+                return `('${item.name}', ${item.price}, '${item.imageSrc}', '${item.description}')`
             }).join(",\n")}
         `
         
@@ -25,7 +25,7 @@ exports = module.exports = class {
         const query = `
             UPDATE catalog SET name=updated_catalog.name, price=updated_catalog.price, image_src=updated_catalog.image_src, description=updated_catalog.description
             FROM (
-                VALUES ${itemList.map(item => `('${item.catalogId}', '${item.name}', ${item.price}, '${item.imageSrc}', '${item.description}')`).join(",\n")}
+                VALUES ${itemList.map(item => `('${item.name}', ${item.price}, '${item.imageSrc}', '${item.description}')`).join(",\n")}
             ) AS updated_catalog(catalog_id, name, price, image_src, description)
             WHERE catalog.catalog_id=updated_catalog.catalog_id
         `

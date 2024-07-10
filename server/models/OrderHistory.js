@@ -21,7 +21,20 @@ exports = module.exports = class {
     */
 
     async addToOrderHistory(order) {
-        
+        const query = `
+            CALL add_to_order_history((
+                ${order.totalPrice},
+                ARRAY[${order.items.map(item => {
+                    return `(${item.catalog_id}, ${item.amount})::item_amount`
+                }).join(",")}]
+                    )::order_info)
+        `
+
+        return await queryDatabase(query)
+        .then(res => {
+            console.log("Successfully added query...");
+        })
+        .catch(err => console.error(err));
     }
 
     async removeFromOrderHistory(order) {
@@ -29,14 +42,13 @@ exports = module.exports = class {
     }
 
     async updateOrderHistory(order) {
-
+        
     }
 
-    async getOrderHistory() {
-        const query = `SELECT * FROM order_history`;
+    async getOrderHistory(numOfRecords) {
+        const query = `SELECT * FROM order_history LIMIT ${numOfRecords}`;
         return await queryDatabase(query)
         .then(res => {
-            console.log(res);
             return res;
         })
         .catch(err => console.error(err));
