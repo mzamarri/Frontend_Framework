@@ -1,3 +1,124 @@
+-- SELECT EXISTS (
+--     SELECT catalog_id FROM catalog
+--     WHERE catalog_id = 75
+-- );
+
+-- SELECT EXISTS (
+--     SELECT catalog_id FROM catalog
+--     WHERE catalog_id = 80
+-- );
+
+-- SELECT key FROM json_each('{"a": 12, "b": null, "c": "Hello World!"}'::json);
+
+-- DO $$
+-- DECLARE
+--     _key text;
+--     _value json;
+-- BEGIN
+--     FOR _key, _value IN SELECT * FROM json_each('{"a": 12, "b": null, "c": "Hello World!"}'::json) LOOP
+--         RAISE NOTICE 'key: %', _key;
+--         RAISE NOTICE 'value: %', _value;
+--     END LOOP;
+-- END $$ LANGUAGE plpgsql;
+
+-- CALL update_order_history(1, '{
+--     "items": {
+--         "ADD": [
+--             {
+--                 "catalog_id": 2,
+--                 "amount": 111
+--             },
+--             {
+--                 "catalog_id": 3,
+--                 "amount": 123
+--             }
+--         ]
+--     }
+-- }');
+
+-- Testing update_order_history procedure
+
+-- CALL update_order_history(1, '{
+--     "items": {
+--         "UPDATE": [
+--             {
+--                 "catalog_id": 1,
+--                 "amount": 111
+--             }, {
+--                 "catalog_id": 2,
+--                 "amount": 222
+--             }, {
+--                 "catalog_id": 3,
+--                 "amount": 333
+--             }
+--         ]
+--     }
+-- }');
+
+
+-- WITH results (name, price, image_src, description) AS (
+--     SELECT * FROM json_to_recordset(
+--         '[
+--             {
+--                 "name": "Xbox",
+--                 "price": 1000.00,
+--                 "image_src": "#",
+--                 "description": "Description of xbox"
+--             }, 
+--             {
+--                 "name": "PS",
+--                 "price": 500.00,
+--                 "image_src": "#",
+--                 "description": "Description of PS"
+--             },
+--             {
+--                 "name": "Nintendo",
+--                 "price": 499.99,
+--                 "image_src": "#",
+--                 "description": "Description of Nintendo"
+--             },
+--             {
+--                 "name": "Game Boy",
+--                 "price": 123.456,
+--                 "image_src": "#",
+--                 "description": "Description of Game Boy"
+--             },
+--             {
+--                 "name": "Mike",
+--                 "price": 123.456,
+--                 "image_src": "#",
+--                 "description": "Description of Mike"
+--             }
+--         ]'
+--     ) 
+--     AS (name text, price float, image_src text, description text)
+-- ) INSERT INTO catalog (name, price, image_src, description) SELECT * FROM results;
+
+-- CALL clear_tables();
+-- CALL create_tables();
+
+-- SELECT * FROM json_to_recordset(
+--     '[
+--         {
+--             "name": "Item 1",
+--             "price": 9.99,
+--             "imageSrc": "#",
+--             "description": "Item 1 description"
+--         },
+--         {
+--             "name": "Item 2",
+--             "price": 19.99,
+--             "imageSrc": "#",
+--             "description": "Item 2 description"
+--         },
+--         {
+--             "name": "Item 3",
+--             "price": 29.99,
+--             "imageSrc": "#",
+--             "description": "Item 3 description"
+--         }
+--     ]'
+-- ) 
+-- AS (name text, price float, "imageSrc" text, description text);
+
 SELECT * FROM catalog;
-SELECT * FROM orders;
-SELECT * FROM order_items;

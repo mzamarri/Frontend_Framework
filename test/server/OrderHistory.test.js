@@ -2,7 +2,7 @@ const OrderHistory = require('../../server/models/OrderHistory');
 const Catalog = require('../../server/models/Catalog');
 const catalogItems = require('../../server/productList');
 
-describe("Order History add method", () => {
+describe("Order History Add method", () => {
     let orderHistory, catalog;
     beforeEach(() => {
         orderHistory = new OrderHistory();
@@ -24,5 +24,9 @@ describe("Order History add method", () => {
 });
 
 describe("Order History Get method", () => {
-    
-})
+
+});
+
+describe("Order History Update method", async () => {
+
+});

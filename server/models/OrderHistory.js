@@ -37,15 +37,27 @@ exports = module.exports = class {
         .catch(err => console.error(err));
     }
 
-    async removeFromOrderHistory(order) {
+    async removeFromOrderHistory(order_id) {
 
     }
 
-    async updateOrderHistory(order) {
-        
+    async updateOrderHistory(order_id, updated_order) {
+        const query = `
+            CALL update_order_history(
+                ${order_id},
+                '${updated_order}'
+            );
+        `
+
+        return await queryDatabase(query)
+        .then(res => {
+            console.log("Successfully updated database...");
+            console.log(res);
+        })
+        .catch(err => console.error(err));
     }
 
-    async getOrderHistory(numOfRecords) {
+    async getOrderHistory(numOfRecords=15) {
         const query = `SELECT * FROM order_history LIMIT ${numOfRecords}`;
         return await queryDatabase(query)
         .then(res => {
