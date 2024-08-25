@@ -4,32 +4,31 @@ exports = module.exports = class {
     }
 
     addToCart(item) {
-        this.cart.hasOwnProperty(item.id) ? this.cart[item.id].amount++ : this.cart[item.id] = {amount: 1, cartItem: item};
+        this.cart.hasOwnProperty(item.catalogId) ? this.cart[catalogId].amount++ : this.cart[item.catalogId] = {amount: item.amount, catalogId: item.catalogId};
     }
 
-    removeFromCart(id) {
-        if (id in this.cart) {
-            delete this.cart[id];
+    removeFromCart(catalogId) {
+        if (catalogId in this.cart) {
+            delete this.cart[catalogId];
             return;
         }
         console.log("Item not in cart");
     }
 
-    updateCart(id, quantity) {
-        this.cart[id].amount = quantity;
+    updateCart(updatedItem) {
+        this.cart[updatedItem.catalogId].amount = updatedItem.amount;
     }
 
-    addAmount(id, quantity) {
-        if (this.cart[id].amount + quantity > 0) {
-            this.cart[id].amount += quantity;
-        } else if (this.cart[id].amount + quantity <= 0) {
-            this.removeFromCart(id);
+    addAmount(item) {
+        if (this.cart[item.catalogId].amount + item.amount > 0) {
+            this.cart[item.catalogId].amount += item.amount;
+        } else if (this.cart[item.catalogId].amount + item.amount <= 0) {
+            this.removeFromCart(catalogId);
         }
     }
 
     getCart() {
-        let cart = Object.entries(this.cart);
-        return cart;
+        return Object.entries(this.cart);
     }
 
     saveCartToDatabase() {
@@ -38,5 +37,9 @@ exports = module.exports = class {
 
     loadCartFromDatabase() {
         this.cart = JSON.parse(sessionStorage.getItem("cart")) || {};
-    } 
+    }
+
+    returnName() {
+        return "Mr Cart" 
+    }
 }

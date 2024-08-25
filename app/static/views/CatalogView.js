@@ -1,16 +1,18 @@
 import AbstractView from "../Modules/Views/AbstractView.js";
-import itemList from "../productList.js";
 import { cart } from "../index.js";
 
 export default class extends AbstractView {
     constructor() {
         super();
         super.setTitle("Catalog");
-        this.items = itemList;
         this.currentPage = 1;
+        this.cart = cart;
     }
 
-    getHtml() {
+    async getHtml() {
+        this.catalog = await fetch('/get-catalog') // add ternary operation
+        .then(res => res.json());
+
         let productListHTML = this.createProductList();
         let paginationHTML = this.createPagination();
         return `
@@ -34,24 +36,22 @@ export default class extends AbstractView {
     }
 
     createProductList() {
-        let html = ""
-        let itemList = this.items.slice((this.currentPage - 1) * 50, this.currentPage * 50);
-        itemList.forEach(item => {
+        let html = "";
+        this.catalog.forEach(item => {
             html += `
                 <div class="item">
                     <img src="${item.imageSrc}" alt="product photo">
                     <p>${item.description}</p>
                     <h3>$${item.price}</h3>
-                    <button class="add-cart" data-id="${item.id}">Add to Cart</button>
+                    <button class="add-cart" data-id="${item.catalogId}">Add to Cart</button>
                 </div>
             `
         })
-        fetch("/cart");
         return html;
     }
 
     createPagination() {
-        let numOfPages = Math.ceil(this.items.length / 50);
+        let numOfPages = Math.ceil(this.catalog.length / 50);
         let html = "";
         for (let i = 1; i <= numOfPages; i++) {
             if (i === this.currentPage) {
@@ -60,7 +60,7 @@ export default class extends AbstractView {
                 html += `<li><a href="/catalog/${i}">${i}</a></li>`
             }
         }
-        return html; 
+        return html;
     }
 
     selectPage(event) {
@@ -79,8 +79,23 @@ export default class extends AbstractView {
 
         let addToCartBtn = document.getElementById("game-catalog").querySelectorAll("button.add-cart");
         addToCartBtn.forEach((btn) => {
-            btn.addEventListener("click", () => {
-                cart.addToCart(this.items[parseInt(btn.dataset.id) - 1]);
+            btn.addEventListener("click", async () => {
+                const url = '/add-items';
+                await fetch(url, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        
+                    })
+                })
+                .then(res => res.text())
+                .then(data => console.log("successfully retrieved server data"))
+                .catch(err => {
+                    console.error(err);
+                    throw err;
+                });
             })
         })
     }

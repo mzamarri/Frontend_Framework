@@ -1,34 +1,29 @@
 const express = require('express');
 const path = require('path');
-const Cart = require("./Cart.js");
-const OrderHistory = require("./OrderHistory.js");
+const session = require('express-session');
+const routes = require('./routes');
+const Cart = require('./Cart');
 
-const app = express();
+const app = express(); 
+
+app.use(session({
+    secret: "MySecretVeryVerySecreyKey"
+}))
+
+app.use((req, res, next) => {
+    if (!req.session.shoppingCart) {
+        req.session.shoppingCart = new Cart();
+    }
+    next();
+})
+
+app.use(routes);
 
 app.use("/static", express.static(path.resolve(__dirname, "../app/static/")));
 
 app.post("/checkout", (req, res) => {
     console.log("/checkout POST");
     res.redirect("/");
-})
-
-app.get("/cart/get-items", (req, res) => {
-    console.log("/cart/get-items GET");
-    res.send({
-        "3": {
-            amount: 1,
-            cartItem: {
-                name: "Product 3",
-                price: 75.00,
-                imageSrc: "#",
-                description: "Product 3 description"
-            }
-        }
-    });
-})
-
-app.get("/*", (req, res) => {
-    res.sendFile(path.resolve(__dirname, "../app/index.html"));
 })
 
 app.listen(4600, () => {

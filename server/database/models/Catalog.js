@@ -11,36 +11,44 @@ exports = module.exports = class {
         
         await queryDatabase(query)
         .then(console.log("Successfully added items to catalog"))
-        .catch(err => console.error(err.stack));
+        .catch(err => {
+            console.error("Error getting catalog: ", err);
+            throw err;
+        });
     }
 
     async removeFromCatalog(itemList) {
         const query = `DELETE FROM catalog WHERE catalog_id IN (${itemList.map(item => `'${item.catalogId}'`).join(", ")})`
         await queryDatabase(query)
         .then(console.log("Successfully removed items from catalog"))
-        .catch(err => console.error(err.stack));
+        .catch(err => {
+            console.error("Error getting catalog: ", err);
+            throw err;
+        });
     }
 
     async updateCatalog(itemList) {
         const query = `
-            UPDATE catalog SET name=updated_catalog.name, price=updated_catalog.price, image_src=updated_catalog.image_src, description=updated_catalog.description
-            FROM (
-                VALUES ${itemList.map(item => `('${item.name}', ${item.price}, '${item.imageSrc}', '${item.description}')`).join(",\n")}
-            ) AS updated_catalog(catalog_id, name, price, image_src, description)
-            WHERE catalog.catalog_id=updated_catalog.catalog_id
+            CALL update_catalog('${JSON.stringify(itemList)}');
         `
         await queryDatabase(query)
         .then(() => console.log("Successfully updated items in catalog"))
-        .catch(err => console.error(err.stack)); 
+        .catch(err => {
+            console.error("Error getting catalog: ", err);
+            throw err;
+        }); 
     }
 
     async getCatalog(offset=0) {
-        const query = `SELECT * FROM catalog LIMIT 500 OFFSET ${500 * offset}`
+        const query = `SELECT * FROM get_catalog() LIMIT 500 OFFSET ${500 * offset}`
         return await queryDatabase(query)
         .then(res => {
             console.log("Successfully fetched catalog");
             return res.rows;
         })
-        .catch(err => console.error(err.stack));
+        .catch(err => {
+            console.error("Error getting catalog: ", err);
+            throw err;
+        });
     }
 }

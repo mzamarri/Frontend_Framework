@@ -22,46 +22,43 @@ exports = module.exports = class {
 
     async addToOrderHistory(order) {
         const query = `
-            CALL add_to_order_history((
-                ${order.totalPrice},
-                ARRAY[${order.items.map(item => {
-                    return `(${item.catalog_id}, ${item.amount})::item_amount`
-                }).join(",")}]
-                    )::order_info)
+            CALL add_to_orders('${JSON.stringify(order)}');
         `
 
         return await queryDatabase(query)
-        .then(res => {
-            console.log("Successfully added query...");
+        .then(() => {
+            console.log("Successfully added order...");
         })
         .catch(err => console.error(err));
     }
 
-    async removeFromOrderHistory(order_id) {
+    async removeFromOrderHistory(orderId) {
 
     }
 
-    async updateOrderHistory(order_id, updated_order) {
+    async updateOrderHistory(updatedOrder) {
         const query = `
-            CALL update_order_history(
-                ${order_id},
-                '${updated_order}'
-            );
+            CALL update_order_history('${JSON.stringify(updatedOrder)}');
         `
 
         return await queryDatabase(query)
         .then(res => {
             console.log("Successfully updated database...");
-            console.log(res);
         })
-        .catch(err => console.error(err));
+        .catch(err => {
+            console.error(err);
+            throw err;
+        });
     }
 
     async getOrderHistory(numOfRecords=15) {
-        const query = `SELECT * FROM order_history LIMIT ${numOfRecords}`;
+        const query = `
+            SELECT * FROM get_order_history(${numOfRecords});
+        `;
         return await queryDatabase(query)
         .then(res => {
-            return res;
+            console.log("Successfully queried order...")
+            return res.rows;
         })
         .catch(err => console.error(err));
     }

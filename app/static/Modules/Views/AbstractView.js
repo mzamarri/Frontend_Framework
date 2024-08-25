@@ -16,6 +16,7 @@ export default class {
     }
 
     setEventListeners() {
+        console.log("No event listeners");
         return;
     }
 }

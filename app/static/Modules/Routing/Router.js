@@ -26,8 +26,9 @@ export const router = async () => {
 
     const view = new match.route.view();
 
+    const app = document.getElementById("app");
     const html = await view.getHtml();
-    document.getElementById("app").innerHTML = html;
+    await view.render(app, html);
     view.setEventListeners();
 }
 
