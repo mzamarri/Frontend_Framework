@@ -11,11 +11,12 @@ app.use(session({
 }))
 
 app.use((req, res, next) => {
-    if (!req.session.shoppingCart) {
-        req.session.shoppingCart = new Cart();
-    }
+    // ISSUE: Cart object is being serialized when request are made via express-session. As a result
+    // the type of data stored in session is not a Cart object anymore. Work in progress.
+    if (req.session.cart == {}) return 1; 
+    req.session.cart = new Cart(req.session.cart);
     next();
-})
+});
 
 app.use(routes);
 
@@ -28,4 +29,4 @@ app.post("/checkout", (req, res) => {
 
 app.listen(4600, () => {
     console.log("Server is running on port 4600");
-}); 
+});  
