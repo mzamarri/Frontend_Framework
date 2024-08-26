@@ -4,33 +4,34 @@ export default class {
     }
 
     addToCart(item) {
-        this.cart.hasOwnProperty(item.id) ? this.cart[item.id].amount++ : this.cart[item.id] = {amount: 1, cartItem: item};
+        this.cart.hasOwnProperty(item.catalogId) ? this.cart[item.catalogId].amount++ : this.cart[item.catalogId] = {amount: 1, catalogId: item.catalogId};
         this.saveCartToSessionStorage();
     }
 
-    removeFromCart(id) {
-        if (id in this.cart) {
-            delete this.cart[id];
+    removeFromCart(item) {
+        if (item.catalogId in this.cart) {
+            delete this.cart[catalogId];
             this.saveCartToSessionStorage();
         }
     }
 
-    updateCart(id, quantity) {
-        this.cart[id].amount = quantity;
+    updateCart(item, quantity) {
+        if (!this.cart.hasOwnProperty(item.catalogId)) return console.log("Item not in cart!");
+        this.cart[item.catalogId].amount = quantity;
         this.saveCartToSessionStorage();
     }
 
-    addAmount(id, quantity) {
-        if (this.cart[id].amount + quantity > 0) {
-            this.cart[id].amount += quantity;
+    addAmount(item, quantity) {
+        if (this.cart[item.catalogId].amount + quantity > 0) {
+            this.cart[item.catalogId].amount += quantity;
             this.saveCartToSessionStorage();
-        } else if (this.cart[id].amount + quantity <= 0) {
-            this.removeFromCart(id);
+        } else if (this.cart[item.catalogId].amount + quantity <= 0) {
+            this.removeFromCart(item.catalogId);
         }
     }
 
     getCart() {
-        let cart = Object.entries(this.cart);
+        const cart = Object.values(this.cart);
         return cart;
     }
 

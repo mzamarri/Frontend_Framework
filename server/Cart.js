@@ -1,10 +1,12 @@
 exports = module.exports = class {
-    constructor() {
-        this.cart = {};
+    constructor(cart) {
+        this.cart = cart || {};
     }
 
-    addToCart(item) {
-        this.cart.hasOwnProperty(item.catalogId) ? this.cart[catalogId].amount++ : this.cart[item.catalogId] = {amount: item.amount, catalogId: item.catalogId};
+    addToCart(items) {
+        items.forEach(item => 
+            this.cart.hasOwnProperty(item.catalogId) ? this.cart[catalogId].amount++ : this.cart[item.catalogId] = {amount: item.amount, catalogId: item.catalogId}
+        );
     }
 
     removeFromCart(catalogId) {
@@ -17,7 +19,7 @@ exports = module.exports = class {
 
     updateCart(updatedItem) {
         this.cart[updatedItem.catalogId].amount = updatedItem.amount;
-    }
+    } 
 
     addAmount(item) {
         if (this.cart[item.catalogId].amount + item.amount > 0) {

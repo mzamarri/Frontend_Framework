@@ -10,7 +10,7 @@ export default class extends AbstractView {
     }
 
     async getHtml() {
-        this.catalog = await fetch('/get-catalog') // add ternary operation
+        this.catalog = await fetch('/get-catalog')
         .then(res => res.json());
 
         let productListHTML = this.createProductList();
@@ -18,7 +18,7 @@ export default class extends AbstractView {
         return `
             <div class="catalog">
                 <div class="result-filter">
-                    <h2>${this.items.length} of Items</h2>
+                    <h2>${this.catalog.length} of Items</h2>
                     <div>
                         Filter goes here
                     </div>
@@ -79,23 +79,31 @@ export default class extends AbstractView {
 
         let addToCartBtn = document.getElementById("game-catalog").querySelectorAll("button.add-cart");
         addToCartBtn.forEach((btn) => {
+            let timeout;
             btn.addEventListener("click", async () => {
-                const url = '/add-items';
-                await fetch(url, {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json'
-                    },
-                    body: JSON.stringify({
-                        
+                clearTimeout(timeout);
+                cart.addToCart({catalogId: btn.getAttribute("data-id")});
+                timeout = setTimeout(() => {
+                    const url = '/add-items';
+                    const cartItems = cart.getCart();
+                    fetch(url, {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json'
+                        },
+                        body: JSON.stringify(cartItems)
                     })
-                })
-                .then(res => res.text())
-                .then(data => console.log("successfully retrieved server data"))
-                .catch(err => {
-                    console.error(err);
-                    throw err;
-                });
+                    .then(res => res.json())
+                    .then(data => {
+                        if (data.inStock) return console.log("Item in Cart");
+                        const updatedItems = data.updatedItems;
+                        updatedItems.forEach(item => cart.updateCart(item, item.newAmount));
+                    })
+                    .catch(err => {
+                        console.error(err);
+                        throw err;
+                    });
+                }, 1500);
             })
         })
     }
