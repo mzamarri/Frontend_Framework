@@ -10,7 +10,7 @@ export default class extends AbstractView {
     }
 
     async getHtml() {
-        this.catalog = await fetch('/get-catalog')
+        this.catalog = await fetch('/catalog/get-catalog')
         .then(res => res.json());
 
         let productListHTML = this.createProductList();
@@ -79,32 +79,13 @@ export default class extends AbstractView {
 
         let addToCartBtn = document.getElementById("game-catalog").querySelectorAll("button.add-cart");
         addToCartBtn.forEach((btn) => {
-            let timeout;
-            btn.addEventListener("click", async () => {
-                clearTimeout(timeout);
+            btn.addEventListener("click", () => {
+                clearTimeout(this.timeout);
                 cart.addToCart({catalogId: btn.getAttribute("data-id")});
-                timeout = setTimeout(() => {
-                    const url = '/add-items';
-                    const cartItems = cart.getCart();
-                    fetch(url, {
-                        method: 'POST',
-                        headers: {
-                            'Content-Type': 'application/json'
-                        },
-                        body: JSON.stringify(cartItems)
-                    })
-                    .then(res => res.json())
-                    .then(data => {
-                        if (data.inStock) return console.log("Item in Cart");
-                        const updatedItems = data.updatedItems;
-                        updatedItems.forEach(item => cart.updateCart(item, item.newAmount));
-                    })
-                    .catch(err => {
-                        console.error(err);
-                        throw err;
-                    });
+                this.timeout = setTimeout(() => {
+                    cart.saveCart();
                 }, 1500);
-            })
+            });
         })
     }
 }

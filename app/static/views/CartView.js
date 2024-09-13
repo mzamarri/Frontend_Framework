@@ -17,11 +17,14 @@ export default class extends AbstractView {
 
     async getHtml() {
         const hostUrl = window.location.origin;
-        const cart = await fetch(hostUrl + "/cart/get-items")
-            .then(async response => await response.json())
-            .catch(error => console.error(error));
-        console.log("cart: ", cart);
-        const cartHtml = this.getCart(cart);
+        const cartItems = await fetch(hostUrl + "/cart/get-items")
+        .then(async res => res.json())
+        .catch(err => {
+            console.error(err);
+            throw err;
+        });
+
+        const cartHtml = this.getCart(cartItems);
         return `
             <div class="cart-container">
                 <h1>Cart</h1>
@@ -64,7 +67,7 @@ export default class extends AbstractView {
                     <h3>$${item.cartItem.price}</h3>
                 </div>
             `
-        })
+        });
         return html !== "" ? html : "<h2>Your cart is empty</h2>";
     }
 

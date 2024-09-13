@@ -5,7 +5,6 @@ export default class {
 
     addToCart(item) {
         this.cart.hasOwnProperty(item.catalogId) ? this.cart[item.catalogId].amount++ : this.cart[item.catalogId] = {amount: 1, catalogId: item.catalogId};
-        this.saveCartToSessionStorage();
     }
 
     removeFromCart(item) {
@@ -35,11 +34,31 @@ export default class {
         return cart;
     }
 
-    saveCartToSessionStorage() {
-        sessionStorage.setItem("cart", JSON.stringify(this.cart));
+    async saveCart() {
+        const url = "/cart/add-items";
+        const cartItems = this.getCart();
+        await fetch(url, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(cartItems)
+        })
+        .then(res => res.json())
+        .then(data => {
+            console.log("fetch api data received...");
+            // if (data.inStock) return console.log("Item in Cart");
+            // const updatedItems = data.updatedItems;
+            // updatedItems.forEach(item => cart.updateCart(item, item.newAmount));
+        })
+        .catch(err => {
+            console.error(err);
+            throw err;
+        })
+        .finally(() => {console.log("Finally called")});
     }
 
-    loadCartFromSessionStorage() {
-        this.cart = JSON.parse(sessionStorage.getItem("cart")) || {};
-    } 
+    loadCart() {
+        console.log("CartLoaded");
+    }
 }

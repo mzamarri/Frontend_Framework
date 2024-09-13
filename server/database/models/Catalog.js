@@ -1,6 +1,11 @@
 const queryDatabase = require('../queryDatabase');
 
 exports = module.exports = class {
+
+    constructor() {
+        this.catalog = this.getCatalog();
+    }
+
     async addToCatalog(itemList) {
         const query = `
             INSERT INTO catalog (name, price, image_src, description)
@@ -48,6 +53,19 @@ exports = module.exports = class {
         })
         .catch(err => {
             console.error("Error getting catalog: ", err);
+            throw err;
+        });
+    }
+
+    async getItems(items) {
+        const catalogIdList = items.map(item => item.catalogId).join(', ');
+        const query = `
+            SELECT * FROM get_catalog() WHERE "catalogId" IN (${catalogIdList});
+        `
+        return await queryDatabase(query)
+        .then(res => res.rows)
+        .catch(err => {
+            console.error(err);
             throw err;
         });
     }

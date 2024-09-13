@@ -28,7 +28,7 @@ export const router = async () => {
 
     const app = document.getElementById("app");
     const html = await view.getHtml();
-    await view.render(app, html);
+    view.render(app, html);
     view.setEventListeners();
 }
 

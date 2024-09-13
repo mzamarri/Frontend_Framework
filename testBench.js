@@ -1,7 +1,9 @@
 const queryDatabase = require('./server/database/queryDatabase');
 const { populateDatabaseCatalog, generateCatalog } = require('./server/database/test_utils/setupDatabaseCatalog');
 const { populateDatabaseOrders, generateOrders } = require('./server/database/test_utils/setupDatabaseOrders');
-const OrderHistory = require('./server/database/models/OrderHistory')
+const OrderHistory = require('./server/database/models/OrderHistory');
+const Catalog = require('./server/database/models/Catalog');
+const Cart = require('./server/database/models/Cart');
 
 const isLogging = true
 
@@ -63,88 +65,8 @@ async function setupDatabase(catalongOnly=false) {
 }
 
 (async () => {
-
-    await setupDatabase(true);
-    const ordersHistory = new OrderHistory();
-
-    const getOrderHistoryQuery = `
-        SELECT * FROM get_order_history();
-    `
-
-    const results = await queryDatabase(getOrderHistoryQuery);
-    console.log("results: \n", results.rows);
-
-    // const updatedObject = {
-    //     orderId: 1,
-    //     address: "New address",
-    //     totalPrice: 1000000,
-    //     items: {
-    //         add: [
-    //             {
-    //                 catalogId: 1,
-    //                 amount: 5
-    //             },
-    //             {
-    //                 catalogId: 3,
-    //                 amount: 10
-    //             },
-    //             {
-    //                 catalogId: 7,
-    //                 amount: 15
-    //             }
-    //         ],
-    //         remove: [
-    //             {
-    //                 catalogId: 4
-    //             },
-    //             {
-    //                 catalogId: 5
-    //             },
-    //             {
-    //                 catalogId: 6
-    //             }
-    //         ],
-    //         update: [
-    //             {
-    //                 catalogId: 1,
-    //                 amount: 20
-    //             },
-    //             {
-    //                 catalogId: 2,
-    //                 amount: 25
-    //             },
-    //             {
-    //                 catalogId: 3,
-    //                 amount: 30
-    //             }
-    //         ]
-    //     }
-    // }
-
-    // ordersHistory.updateOrderHistory(updatedObject);
-
-    const newOrder = {
-        address: "619 Avenue",
-        totalPrice: 999.99,
-        items: [
-            {
-                catalogId: 5,
-                amount: 11
-            },
-            {
-                catalogId: 7,
-                amount: 22
-            },
-            {
-                catalogId: 11,
-                amount: 33
-            },
-        ]
-    }
-
-    ordersHistory.addToOrderHistory(newOrder);
-    const updatedResults = await queryDatabase(getOrderHistoryQuery);
-    console.log("updated results: \n", updatedResults.rows);
+    const cart = new Cart();
+    await cart.loadCartFromDatabase()
 })()
 
 
