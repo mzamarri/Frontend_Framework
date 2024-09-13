@@ -8,6 +8,7 @@ router.get(["/", "/get-items"], (req, res) => {
  
 router.post("/add-items", (req, res) => {
     req.session.cart.addToCart(req.body);
+    res.json({message: "Request saved successfully"});
 }); 
 
 module.exports = router;

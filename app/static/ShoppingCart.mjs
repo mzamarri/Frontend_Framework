@@ -47,9 +47,7 @@ export default class {
         .then(res => res.json())
         .then(data => {
             console.log("fetch api data received...");
-            // if (data.inStock) return console.log("Item in Cart");
-            // const updatedItems = data.updatedItems;
-            // updatedItems.forEach(item => cart.updateCart(item, item.newAmount));
+            this.cart = {};
         })
         .catch(err => {
             console.error(err);

@@ -53,7 +53,10 @@ exports = module.exports = class Cart {
             CALL add_to_cart('${this.userId}', '${JSON.stringify(cart)}');
         `
         await queryDatabase(query)
-        .then(() => console.log("Cart saved..."))
+        .then(() => {
+            console.log("Cart saved...");
+            this.cart = {};
+        })
         .catch(err => {
             console.error("Error saving to database: ", err);
             throw err;
