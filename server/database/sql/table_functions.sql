@@ -149,17 +149,18 @@ END $$ LANGUAGE plpgsql;
 
 -- Cart
 
-CREATE OR REPLACE FUNCTION get_cart(user_id text)
+CREATE OR REPLACE FUNCTION get_cart(user_id text) 
 RETURNS TABLE (
-    "userId" text,
-    "catalogId" int,
-    name text,
-    price float,
-    "imageSrc" text,
-    description text
-)
-AS $$
-    SELECT c.user_id, c.catalog_id, cat.name, cat.price, cat.image_src, cat.description 
+    "cart" json
+) AS $$
+    SELECT json_objectagg(c.catalog_id : json_object(
+        'catalogId': c.catalog_id,
+        'name': cat.name,
+        'price': cat.price,
+        'imageSrc': cat.image_src,
+        'description': cat.description,
+        'amount': c.quantity
+    ))
     FROM cart c JOIN catalog cat ON c.catalog_id = cat.catalog_id WHERE c.user_id = get_cart.user_id;
 $$ LANGUAGE SQL;
 

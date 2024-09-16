@@ -41,8 +41,9 @@ exports = module.exports = class Cart {
         this.saveCartToDatabase();
     } 
 
-    getCart() {
-        this.loadCartFromDatabase();
+    // Need to change object returned from database to a JS object
+    async getCart() {
+        this.cart = await this.loadCartFromDatabase();
         return Object.values(this.cart);
     }
 
@@ -66,15 +67,17 @@ exports = module.exports = class Cart {
     async loadCartFromDatabase() {
         console.log("User Id: ", this.userId);
         const query = `
-            SELECT * FROM get_cart(${this.userId})
+            SELECT * FROM get_cart('${this.userId}')
         `
-        await queryDatabase(query)
-        .then(res => res.rows)
+        return await queryDatabase(query)
+        .then(res => {
+            console.log("Loaded data...");
+            return res.rows[0]["cart"];
+        })
         .catch(err => {
             console.error("Error loading cart from database");
             throw err;
-        });
-        console.log("Loaded data...");
+        }) || [];
     }
 
     static newSession(sessionId) {

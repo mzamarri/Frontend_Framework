@@ -50,21 +50,21 @@ export default class extends AbstractView {
 
     getCart(items) {
         let html = "";
-        Object.entries(items).forEach(([id, item]) => {
+        items.forEach(item => {
             html += `
-                <div class="cart-item" data-id=${id}>
+                <div class="cart-item" data-id=${item.catalogId}>
                     <button class="remove-item" >X</button>
-                    <img src="${item.cartItem.imageSrc}" alt="product photo">
+                    <img src="${item.imageSrc}" alt="product photo">
                     <div class="product-description">
-                        <h3>${item.cartItem.name}</h3>
-                        <p>${item.cartItem.description}</p>
+                        <h3>${item.name}</h3>
+                        <p>${item.description}</p>
                     </div>
                     <div class="quantity">
                         <button class="decrement-quantity">-</button>
                         <input type="text" class="quantity-input" name="quantity" min="0" value="${item.amount}">
                         <button class="increment-quantity">+</button>
                     </div>
-                    <h3>$${item.cartItem.price}</h3>
+                    <h3>$${item.price}</h3>
                 </div>
             `
         });
