@@ -17,12 +17,7 @@ export default class extends AbstractView {
 
     async getHtml() {
         const hostUrl = window.location.origin;
-        const cartItems = await fetch(hostUrl + "/cart/get-items")
-        .then(async res => res.json())
-        .catch(err => {
-            console.error(err);
-            throw err;
-        });
+        const cartItems = await cart.getCart();
 
         const cartHtml = this.getCart(cartItems);
         return `
@@ -71,7 +66,8 @@ export default class extends AbstractView {
         return html !== "" ? html : "<h2>Your cart is empty</h2>";
     }
 
-    async updateCart(event) {
+    updateCart(event) {
+        event.preventDefault();
         let domObj, id = event.currentTarget.getAttribute("data-id");
         switch (event.target.tagName) {
             case "INPUT":{
@@ -80,16 +76,16 @@ export default class extends AbstractView {
                     this.cart.removeFromCart(id);
                     domObj = document.getElementById(this.cartItemsId);
                 } else {
-                    this.cart.updateCart(id, amount);
+                    this.cart.updateAmount(id, amount);
                 }
-                this.render(domObj, await this.getCart());
+                this.render(domObj, this.getCart());
                 break;
             }
             case "BUTTON": {
                 domObj = document.getElementById(this.cartItemsId);
-                let itemAmount = event.currentTarget.querySelector(".quantity-input");
                 if (event.target.classList.contains("remove-item")) {
-                   cart.removeFromCart(id);
+                   cart.deleteItem(id);
+                   event.currentTarget.remove();
                 } else {
                     if (event.target.classList.contains("increment-quantity")) {
                         cart.addAmount(id, 1);
@@ -97,7 +93,7 @@ export default class extends AbstractView {
                         cart.addAmount(id, -1);
                     }
                     }
-                cart.cart.hasOwnProperty(id) ? itemAmount.value = cart.cart[id].amount : this.render(domObj, await this.getCart());
+                // this.render(domObj, this.getCart());
             }
         }
     }
@@ -109,13 +105,15 @@ export default class extends AbstractView {
         const checkout = document.getElementById("checkout");
         
         cartItems.forEach(item => item.addEventListener("click", (event) => {
+            clearTimeout(this.timeout);
             this.updateCart(event);
+            this.timeout = setTimeout(() => {
+                cart.saveCart()
+            }, 1500);
         }));
 
         checkout.addEventListener("click", () => {
             alert("Thank you for your purchase!");
-            cart.cart = {};
-            cart.saveCartToSessionStorage();
         });
     }
 }

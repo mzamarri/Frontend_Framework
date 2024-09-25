@@ -18,7 +18,7 @@ async function setupDatabase(catalogOnly=false) {
         throw err;
     });
 
-    const generatedCatalog = generateCatalog(60);
+    const generatedCatalog = generateCatalog(200);
     const catalog = await populateDatabaseCatalog(generatedCatalog, true)
     .then(res => {
         console.log("Catalog successfully setup");
@@ -45,6 +45,21 @@ async function setupDatabase(catalogOnly=false) {
 (async () => {
     const orders = await setupDatabase();
     console.log("orders: ", orders);
+    
+    const cart = new Cart();
+    const userId = 'mike50zam';
+    const items = [
+        {catalogId: 1, amount: 5},
+        {catalogId: 2, amount: 10},
+        {catalogId: 3, amount: 15},
+        {catalogId: 4, amount: 20},
+        {catalogId: 5, amount: 25},
+        {catalogId: 6, amount: 30}
+    ];
+    cart.userId = userId;
+    await cart.saveCartToDatabase(items);
+    // const itemsToDelete = [1,2,3];
+    // cart.deleteFromCart(itemsToDelete);
 })()
 
 

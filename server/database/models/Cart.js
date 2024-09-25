@@ -42,21 +42,18 @@ exports = module.exports = class Cart {
     } 
 
     // Need to change object returned from database to a JS object
-    async getCart() {
-        this.cart = await this.loadCartFromDatabase();
-        return Object.values(this.cart);
+    getCart() {
+        return this.cart;
     }
 
-    async saveCartToDatabase() {
+    async saveCartToDatabase(items) {
         console.log("items: ", this.cart);
-        const cart = Object.values(this.cart);
         const query = `
-            CALL add_to_cart('${this.userId}', '${JSON.stringify(cart)}');
+            CALL add_to_cart('${this.userId}', '${JSON.stringify(items)}');
         `
         await queryDatabase(query)
         .then(() => {
             console.log("Cart saved...");
-            this.cart = {};
         })
         .catch(err => {
             console.error("Error saving to database: ", err);
@@ -72,12 +69,41 @@ exports = module.exports = class Cart {
         return await queryDatabase(query)
         .then(res => {
             console.log("Loaded data...");
-            return res.rows[0]["cart"];
+            this.cart = res.rows[0]["cart"] || [];
         })
         .catch(err => {
             console.error("Error loading cart from database");
             throw err;
-        }) || [];
+        });
+    }
+
+    async updateCart(updatedItems) {
+        const query = `
+            CALL update_cart('${this.userId}', '${updatedItems}');
+        `;
+
+        return await queryDatabase(query)
+        .then(res => {
+            console.log("Updated Cart...");
+        })
+        .catch(err => {
+            console.error(err);
+            throw err;
+        });
+    }
+
+    async deleteFromCart(deleteItems) {
+        const items = Array.from(new Set(deleteItems));
+        const query = `
+            CALL delete_from_cart('${this.userId}', '${JSON.stringify(items)}');
+        `
+
+        return await queryDatabase(query)
+        .then(res => console.log("Items deleted"))
+        .catch(err => {
+            console.error(err);
+            throw err;
+        });
     }
 
     static newSession(sessionId) {

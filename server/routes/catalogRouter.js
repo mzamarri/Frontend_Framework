@@ -13,6 +13,7 @@ router.get("/get-catalog", async (req, res) => {
 
 router.post("/add-items", (req, res) => {
     req.session.cart.addToCart(req.body);
+    
 }) 
  
 module.exports = router; 

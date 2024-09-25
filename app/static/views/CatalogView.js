@@ -37,7 +37,9 @@ export default class extends AbstractView {
 
     createProductList() {
         let html = "";
-        this.catalog.forEach(item => {
+        const startIndex = (this.currentPage - 1) * 60;
+        const itemsToDisplay = [...this.catalog].splice(startIndex, 60);
+        itemsToDisplay.forEach(item => {
             html += `
                 <div class="item">
                     <img src="${item.imageSrc}" alt="product photo">
@@ -51,7 +53,7 @@ export default class extends AbstractView {
     }
 
     createPagination() {
-        let numOfPages = Math.ceil(this.catalog.length / 50);
+        let numOfPages = Math.ceil(this.catalog.length / 60);
         let html = "";
         for (let i = 1; i <= numOfPages; i++) {
             if (i === this.currentPage) {
@@ -63,29 +65,38 @@ export default class extends AbstractView {
         return html;
     }
 
-    selectPage(event) {
-        event.preventDefault();
-        if (event.target.tagName === "A") {
-            event.currentTarget.querySelector("a.active").classList.remove("active");
-            event.target.classList.add("active");
-            this.currentPage = parseInt(event.target.innerText);
-            document.getElementById("game-catalog").innerHTML = this.createProductList();
-        }
+    selectPageEventListener() {
+        const pagination = document.getElementById("catalog-pagination");
+        pagination.addEventListener("click", e => {
+            e.preventDefault();
+            if (e.target.tagName === "A") {
+                e.currentTarget.querySelector("a.active").classList.remove("active");
+                e.target.classList.add("active");
+                this.currentPage = parseInt(e.target.innerText);
+                this.catalogList.innerHTML = this.createProductList();
+                this.setAddToCartEventListener();
+                this.catalogList.scrollTo(0, 0);
+            }
+        })
     }
 
-    setEventListeners() {
-        let pagination = document.getElementById("catalog-pagination");
-        pagination.addEventListener("click", (e) => this.selectPage(e));
-
-        let addToCartBtn = document.getElementById("game-catalog").querySelectorAll("button.add-cart");
-        addToCartBtn.forEach((btn) => {
-            btn.addEventListener("click", () => {
+    addToCartEventListener() {
+        this.catalogList.querySelectorAll("button.add-cart").forEach(btn => {
+            btn.addEventListener("click", e => {
                 clearTimeout(this.timeout);
-                cart.addToCart({catalogId: btn.getAttribute("data-id")});
+                const catalogId = e.target.getAttribute("data-id")
+                cart.addItem(catalogId);
                 this.timeout = setTimeout(() => {
                     cart.saveCart();
                 }, 1500);
             });
-        })
+        });
+    }
+
+    setEventListeners() {
+        this.catalogList = document.getElementById("game-catalog");
+        
+        this.addToCartEventListener();
+        this.selectPageEventListener();
     }
 }

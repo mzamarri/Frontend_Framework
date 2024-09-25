@@ -3,8 +3,8 @@ import ShoppingCart from "./ShoppingCart.mjs";
 
 window.addEventListener("popstate", router);
 
-document.addEventListener("DOMContentLoaded", () => {
-    cart.loadCart();
+document.addEventListener("DOMContentLoaded", async () => {
+    await cart.getCart();
     router();
 });
 

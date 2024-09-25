@@ -153,7 +153,7 @@ CREATE OR REPLACE FUNCTION get_cart(user_id text)
 RETURNS TABLE (
     "cart" json
 ) AS $$
-    SELECT json_objectagg(c.catalog_id : json_object(
+    SELECT json_arrayagg(json_object(
         'catalogId': c.catalog_id,
         'name': cat.name,
         'price': cat.price,
@@ -191,3 +191,20 @@ BEGIN
         END IF;
     END LOOP;
 END $$ LANGUAGE plpgsql;
+
+CREATE OR REPLACE PROCEDURE update_cart(user_id text, _items json) AS $$
+    WITH items (catalog_id, updated_amount) AS (
+        SELECT * FROM json_to_recordset(_items) 
+        AS ("catalogId" int, "updatedAmount" int)
+    )
+    UPDATE cart c SET quantity = items.updated_amount FROM items
+    WHERE c.user_id = update_cart.user_id AND c.catalog_id = items.catalog_id;
+$$ LANGUAGE SQL;
+
+CREATE OR REPLACE PROCEDURE delete_from_cart(user_id text, _items json) AS $$
+    WITH items (arr_values) AS (
+        SELECT array_agg(text_values::int) FROM json_array_elements_text(_items) AS text_values
+    )
+    DELETE FROM cart c USING items
+    WHERE c.user_id = delete_from_cart.user_id AND c.catalog_id = ANY (items.arr_values);
+$$ LANGUAGE SQL;
