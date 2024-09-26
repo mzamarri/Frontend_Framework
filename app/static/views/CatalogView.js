@@ -85,7 +85,7 @@ export default class extends AbstractView {
             btn.addEventListener("click", e => {
                 clearTimeout(this.timeout);
                 const catalogId = e.target.getAttribute("data-id")
-                cart.addItem(catalogId);
+                cart.addItem(parseInt(catalogId));
                 this.timeout = setTimeout(() => {
                     cart.saveCart();
                 }, 1500);

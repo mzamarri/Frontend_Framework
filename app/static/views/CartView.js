@@ -5,7 +5,6 @@ export default class extends AbstractView {
     constructor() {
         super();
         super.setTitle("Cart");
-        this.cart = cart;
         this.cartId = "cart";
         this.cartItemsId = "cart-items";
     }
@@ -56,7 +55,7 @@ export default class extends AbstractView {
                     </div>
                     <div class="quantity">
                         <button class="decrement-quantity">-</button>
-                        <input type="text" class="quantity-input" name="quantity" min="0" value="${item.amount}">
+                        <input type="text" class="quantity-input" name="quantity" min="1" value="${item.amount}">
                         <button class="increment-quantity">+</button>
                     </div>
                     <h3>$${item.price}</h3>
@@ -68,47 +67,72 @@ export default class extends AbstractView {
 
     updateCart(event) {
         event.preventDefault();
-        let domObj, id = event.currentTarget.getAttribute("data-id");
         switch (event.target.tagName) {
-            case "INPUT":{
-                let amount = parseInt(event.target.value);
-                if (amount <= 0) {
-                    this.cart.removeFromCart(id);
-                    domObj = document.getElementById(this.cartItemsId);
-                } else {
-                    this.cart.updateAmount(id, amount);
-                }
-                this.render(domObj, this.getCart());
-                break;
-            }
-            case "BUTTON": {
-                domObj = document.getElementById(this.cartItemsId);
-                if (event.target.classList.contains("remove-item")) {
-                   cart.deleteItem(id);
-                   event.currentTarget.remove();
-                } else {
-                    if (event.target.classList.contains("increment-quantity")) {
-                        cart.addAmount(id, 1);
-                    } else if (event.target.classList.contains("decrement-quantity")) {
-                        cart.addAmount(id, -1);
-                    }
-                    }
-                // this.render(domObj, this.getCart());
-            }
+            case "INPUT":
+                this.handleInputChange(event);
+            case "BUTTON":
+                this.handleButtonClick(event);
+            default:
+
         }
     }
 
+    handleInputChange(event) {
+        const cartItem = event.currentTarget;
+        const catalogId = parseInt(cartItem.getAttribute("data-id"));
+        const inputAmount = parseInt(event.target.value);
+        
+        if (inputAmount <= 0) {
+            this.cart.removeFromCart(catalogId);
+            cartItem.remove();
+            return;
+        }
+        cart.updateAmount(inputAmount);
+    }
 
+    handleButtonClick(event) {
+        const cartItem = event.currentTarget;
+        const catalogId = parseInt(cartItem.getAttribute("data-id"));
+        const btn = event.target
+        const input = cartItem.querySelector(".quantity-input");
+        const inputAmount = parseInt(input.value);
+
+        const btnType = ["remove-item", "increment-quantity", "decrement-quantity"]
+            .find(action => btn.classList.contains(action));
+
+        switch (btnType) {
+            case "remove-item":
+                cart.deleteItem(catalogId);
+                cartItem.remove();
+                break;
+            case "increment-quantity":
+                cart.addAmount(catalogId, 1);
+                input.value = inputAmount + 1;
+                break;
+            case "decrement-quantity":
+                cart.addAmount(catalogId, -1);
+                input.value = inputAmount - 1;
+                break;
+            default:
+                throw new Error("Unknown button action");
+        }
+    }
 
     setEventListeners() {
-        const cartItems = document.getElementById("cart").querySelector(".cart-items").querySelectorAll(".cart-item");
+        const cartItems = document.getElementById("cart").querySelector(".cart-items");
+        const cartItemNodeList = cartItems.querySelectorAll(".cart-item");
         const checkout = document.getElementById("checkout");
         
-        cartItems.forEach(item => item.addEventListener("click", (event) => {
+        cartItemNodeList.forEach(item => item.addEventListener("click", (event) => {
             clearTimeout(this.timeout);
             this.updateCart(event);
+
+            const remainingItems = document.querySelectorAll(".cart-item");
+            if (remainingItems.length === 0) cartItems.innerHTML = "<h2>Your cart is empty</h2>";
+
             this.timeout = setTimeout(() => {
-                cart.saveCart()
+                cart.saveCart();
+                console.log("Cart saved...")
             }, 1500);
         }));
 
