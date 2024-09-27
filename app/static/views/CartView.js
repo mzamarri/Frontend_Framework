@@ -9,11 +9,6 @@ export default class extends AbstractView {
         this.cartItemsId = "cart-items";
     }
 
-    render(domObj, html) {
-        domObj.innerHTML = html;
-        this.setEventListeners();
-    }
-
     async getHtml() {
         const hostUrl = window.location.origin;
         const cartItems = await cart.getCart();
@@ -66,14 +61,15 @@ export default class extends AbstractView {
     }
 
     updateCart(event) {
-        event.preventDefault();
         switch (event.target.tagName) {
             case "INPUT":
                 this.handleInputChange(event);
+                break;
             case "BUTTON":
                 this.handleButtonClick(event);
+                break;
             default:
-
+                throw new Error(`Unknown element tag: ${event.target.tagName}`);
         }
     }
 
