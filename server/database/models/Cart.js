@@ -79,7 +79,7 @@ exports = module.exports = class Cart {
 
     async updateCart(updatedItems) {
         const query = `
-            CALL update_cart('${this.userId}', '${updatedItems}');
+            CALL update_cart('${this.userId}', '${JSON.stringify(updatedItems)}');
         `;
 
         return await queryDatabase(query)

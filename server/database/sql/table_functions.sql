@@ -195,7 +195,7 @@ END $$ LANGUAGE plpgsql;
 CREATE OR REPLACE PROCEDURE update_cart(user_id text, _items json) AS $$
     WITH items (catalog_id, updated_amount) AS (
         SELECT * FROM json_to_recordset(_items) 
-        AS ("catalogId" int, "updatedAmount" int)
+        AS ("catalogId" int, amount int)
     )
     UPDATE cart c SET quantity = items.updated_amount FROM items
     WHERE c.user_id = update_cart.user_id AND c.catalog_id = items.catalog_id;

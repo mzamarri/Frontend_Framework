@@ -8,9 +8,10 @@ document.addEventListener("DOMContentLoaded", async () => {
     router();
 });
 
-document.body.addEventListener("click", (e) => {
+document.body.addEventListener("click", async e => {
     if (e.target.matches("[data-link]")) {
         e.preventDefault();
+        await cart.saveCart();
         navigateTo(e.target.href);
     }
 });

@@ -83,12 +83,9 @@ export default class extends AbstractView {
     addToCartEventListener() {
         this.catalogList.querySelectorAll("button.add-cart").forEach(btn => {
             btn.addEventListener("click", e => {
-                clearTimeout(this.timeout);
                 const catalogId = e.target.getAttribute("data-id")
                 cart.addItem(parseInt(catalogId));
-                this.timeout = setTimeout(() => {
-                    cart.saveCart();
-                }, 1500);
+                cart.saveCartTimeout(1500);
             });
         });
     }

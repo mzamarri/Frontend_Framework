@@ -9,9 +9,16 @@ export default class {
 
     addItem(catalogId) {
         const item = this.findItem(catalogId);
-        item !== undefined 
-            ? item.amount++ 
-            : this.cart.push({ catalogId: catalogId, updateAmount: 1 , method: "ADD"});
+        
+        if (item === undefined) {
+            this.cart.push({ catalogId: catalogId, updateAmount: 1 , method: "ADD"});
+            return;
+        }
+
+        item.updateAmount === undefined
+            ? item.updateAmount = ++item.amount
+            : item.updateAmount++;
+        item.method = "UPDATE";
     }
 
     updateAmount(catalogId, quantity) {
@@ -32,12 +39,12 @@ export default class {
         const item = this.findItem(catalogId);
         try {
             const newAmount = item.amount + quantity;
-            item.updateDetails = {};
             if (newAmount > 0) {
-                item.updateDetails["amount"] = newAmount;
-                item.updateDetails["method"] = "UPDATE";
+                item.amount = newAmount;
+                item.updateAmount = newAmount;
+                item.method = "UPDATE";
             } else if (newAmount <= 0) {
-                item.updateDetails["method"] = "DELETE";
+                item.method = "DELETE";
             }
         } catch {
             console.error("Item does not exist. Cannot add amount");
@@ -63,7 +70,14 @@ export default class {
         });
     }
 
+    saveCartTimeout(timeoutDuration) {
+        clearTimeout(this.timeout);
+        this.timeout = setTimeout(this.saveCart.bind(this), timeoutDuration);
+    }
+
     async saveCart() {
+        clearTimeout(this.timeout); // Must clear any timeout to prevent double saving
+
         const saveCart = this.cart.map(item => ({
             catalogId: item.catalogId,
             amount: item.updateAmount,
@@ -76,21 +90,18 @@ export default class {
         const addItems = saveCart.filter(item => item.method === "ADD");
         const updateItems = saveCart.filter(item => item.method === "UPDATE");
 
-        for (const items of [deleteItems, addItems, updateItems]) {
+        const operations = [
+            {item: deleteItems, method: this.deleteFromCart.bind(this)},
+            {item: addItems, method: this.addToCart.bind(this)},
+            {item: updateItems, method: this.updateCart.bind(this)},
+        ]
+
+        for (const { items, method } of operations) {
             if (items.length === 0) continue;
-            switch (items) {
-                case deleteItems:
-                    await this.deleteFromCart(deleteItems);
-                    break;
-                case addItems:
-                    await this.addToCart(items);
-                    break;
-                case updateItems:
-                    await this.updateCart(items);
-                    break;
-            }
+            await method(items);
         }
-        this.cart = [];
+
+        this.cart = await this.getCart();
     }
 
     async addToCart(items) {
@@ -105,7 +116,6 @@ export default class {
         .then(res => res.json())
         .then(data => {
             console.log(data.message);
-            this.cart = {};
         })
         .catch(err => {
             console.error(err);
