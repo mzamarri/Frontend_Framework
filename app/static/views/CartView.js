@@ -5,8 +5,7 @@ export default class extends AbstractView {
     constructor() {
         super();
         super.setTitle("Cart");
-        this.cartId = "cart";
-        this.cartItemsId = "cart-items";
+        this.originalValue = "";
     }
 
     async getHtml() {
@@ -85,17 +84,28 @@ export default class extends AbstractView {
         cart.saveCartTimeout(1500);
     }
 
-    handleInputChange(event) {
-        if (event.key === "Enter") event.preventDefault();
+    validateInput(event) {
+        const input = event.target;
+        const key = event.key;
+        const isNumber = /^[1-9]+$/.test(key);
+        const inputLength = input.value.length;
+        this.originalValue = input.value;
 
+        if (key === "Enter" || !isNumber || inputLength > 12) event.preventDefault();
+    }
+
+    handleInputChange(event) {
         const cartItem = event.currentTarget;
         const catalogId = parseInt(cartItem.getAttribute("data-id"));
-        const inputAmount = parseInt(event.target.value);
+        const inputValue = event.target.value;
+        const inputAmount = parseInt(inputValue);
         
         if (inputAmount <= 0) {
             cart.deleteItem(catalogId);
             cartItem.remove();
             return;
+        } else if (inputValue === "") {
+            event.target.value = this.originalValue;
         }
         cart.updateAmount(catalogId, inputAmount);
     }
@@ -132,16 +142,12 @@ export default class extends AbstractView {
         const checkout = document.getElementById("checkout");
 
         const updateCart = this.updateCart.bind(this);
+        const validateInput = this.validateInput.bind(this);
         
         cartItemNodeList.forEach(item => {
-            item.addEventListener("keydown", e => {
-                if (e.key === "Enter") {
-                    e.preventDefault();
-                    e.target.blur(); // Causes "change" event to trigger when input value is different
-                };
-            });
-            item.addEventListener("click", updateCart);
             item.addEventListener("change", updateCart);
+            item.addEventListener("click", updateCart);
+            item.addEventListener("keypress", validateInput);
         });
         // Note: The blur event only triggers when an eventListener is attached to the input
         // element directly, but not the div element ".cart-item". "change" event works when an

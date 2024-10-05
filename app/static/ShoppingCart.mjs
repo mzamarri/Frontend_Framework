@@ -91,9 +91,9 @@ export default class {
         const updateItems = saveCart.filter(item => item.method === "UPDATE");
 
         const operations = [
-            {item: deleteItems, method: this.deleteFromCart.bind(this)},
-            {item: addItems, method: this.addToCart.bind(this)},
-            {item: updateItems, method: this.updateCart.bind(this)},
+            {items: deleteItems, method: this.deleteFromCart.bind(this)},
+            {items: addItems, method: this.addToCart.bind(this)},
+            {items: updateItems, method: this.updateCart.bind(this)},
         ]
 
         for (const { items, method } of operations) {
