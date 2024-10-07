@@ -1,6 +1,7 @@
 export default class {
     constructor() {
         this.cart = [];
+        this.deleteCart
     }
 
     findItem(catalogId) {
@@ -72,7 +73,7 @@ export default class {
 
     saveCartTimeout(timeoutDuration) {
         clearTimeout(this.timeout);
-        this.timeout = setTimeout(this.saveCart.bind(this), timeoutDuration);
+        this.timeout = setTimeout(() => this.saveCart(), timeoutDuration);
     }
 
     async saveCart() {

@@ -140,14 +140,11 @@ export default class extends AbstractView {
     setEventListeners() {
         const cartItemNodeList = document.querySelectorAll(".cart-item");
         const checkout = document.getElementById("checkout");
-
-        const updateCart = this.updateCart.bind(this);
-        const validateInput = this.validateInput.bind(this);
         
         cartItemNodeList.forEach(item => {
-            item.addEventListener("change", updateCart);
-            item.addEventListener("click", updateCart);
-            item.addEventListener("keypress", validateInput);
+            item.addEventListener("change", e => this.updateCart(e));
+            item.addEventListener("click", e => this.updateCart(e));
+            item.addEventListener("keypress", e => this.validateInput(e));
         });
         // Note: The blur event only triggers when an eventListener is attached to the input
         // element directly, but not the div element ".cart-item". "change" event works when an
