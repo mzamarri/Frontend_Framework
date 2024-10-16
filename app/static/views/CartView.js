@@ -87,11 +87,23 @@ export default class extends AbstractView {
     validateInput(event) {
         const input = event.target;
         const key = event.key;
-        const isNumber = /^[1-9]+$/.test(key);
-        const inputLength = input.value.length;
-        this.originalValue = input.value;
 
-        if (key === "Enter" || !isNumber || inputLength > 12) event.preventDefault();
+        switch (key) {
+            case "Enter":
+                event.preventDefault();
+                input.blur();
+                return;
+        }
+
+        
+        const isNumber = /^[1-9]$/.test(key);
+        const inputLength = input.value.length;
+        const isCharacter = /^.$/.test(key);
+
+        if (isCharacter && (!isNumber || inputLength + 1 > 2)) {
+            event.preventDefault();
+            return;
+        }
     }
 
     handleInputChange(event) {
@@ -105,7 +117,9 @@ export default class extends AbstractView {
             cartItem.remove();
             return;
         } else if (inputValue === "") {
-            event.target.value = this.originalValue;
+            const item = cart.findItem(catalogId);
+            event.target.value = item.amount;
+            return;
         }
         cart.updateAmount(catalogId, inputAmount);
     }
@@ -144,7 +158,7 @@ export default class extends AbstractView {
         cartItemNodeList.forEach(item => {
             item.addEventListener("change", e => this.updateCart(e));
             item.addEventListener("click", e => this.updateCart(e));
-            item.addEventListener("keypress", e => this.validateInput(e));
+            item.addEventListener("keydown", e => this.validateInput(e));
         });
         // Note: The blur event only triggers when an eventListener is attached to the input
         // element directly, but not the div element ".cart-item". "change" event works when an

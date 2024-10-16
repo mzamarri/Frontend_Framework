@@ -172,9 +172,9 @@ BEGIN
     FOR i IN 
         SELECT
             "catalogId" AS catalog_id,
-            amount  
+            "addAmount" as amount  
         FROM json_to_recordset(_items) 
-        AS ("catalogId" int, amount int)
+        AS ("catalogId" int, "addAmount" int)
     LOOP
         SELECT EXISTS ( 
             SELECT * FROM cart c

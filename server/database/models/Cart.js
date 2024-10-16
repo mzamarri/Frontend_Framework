@@ -11,6 +11,8 @@ exports = module.exports = class Cart {
         this.userId = userId;
     }
 
+    
+
     addToCart(items) {
         items.forEach(item => 
             this.cart.hasOwnProperty(item.catalogId) ? this.cart[item.catalogId].amount++ : this.cart[item.catalogId] = {amount: item.amount, catalogId: item.catalogId}
@@ -93,9 +95,8 @@ exports = module.exports = class Cart {
     }
 
     async deleteFromCart(deleteItems) {
-        const items = Array.from(new Set(deleteItems));
         const query = `
-            CALL delete_from_cart('${this.userId}', '${JSON.stringify(items)}');
+            CALL delete_from_cart('${this.userId}', '${JSON.stringify(deleteItems)}');
         `
 
         return await queryDatabase(query)

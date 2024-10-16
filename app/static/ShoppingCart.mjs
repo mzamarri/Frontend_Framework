@@ -1,36 +1,72 @@
 export default class {
     constructor() {
         this.cart = [];
-        this.deleteCart
+        this.deleteItems = [];
+        this.addItems = [];
+        this.updateItems = [];
     }
 
     findItem(catalogId) {
         return this.cart.find(item => item.catalogId === catalogId);
     }
 
+    updateCartChanges(item, operation) {
+        const cartChanges = [
+            this.deleteItems,
+            this.addItems,
+            this.updateItems
+        ];
+
+        cartChanges.forEach(array => {
+            const index = array.indexOf(item);
+            if (index !== -1) array.splice(index, 1);
+        });
+
+        switch (operation) {
+            case "DELETE":
+                this.deleteItems.push(item.catalogId);
+                return;
+            case "UPDATE":
+                this.updateItems.push(item);
+                return;
+            case "ADD":
+                this.addItems.push(item);
+                return;
+        }
+    }
+
     addItem(catalogId) {
         const item = this.findItem(catalogId);
         
         if (item === undefined) {
-            this.cart.push({ catalogId: catalogId, updateAmount: 1 , method: "ADD"});
+            const newItem = {
+                catalogId: catalogId,
+                addAmount: 1
+            }
+            this.cart.push(newItem);
+            this.addItems.push(newItem);
             return;
         }
 
-        item.updateAmount === undefined
-            ? item.updateAmount = ++item.amount
-            : item.updateAmount++;
-        item.method = "UPDATE";
+        item.addAmount === undefined
+            ? item.addAmount = 1
+            : item.addAmount++;
+        item.amount++;
+        this.updateCartChanges(item, "ADD");
     }
 
     updateAmount(catalogId, quantity) {
         const item = this.findItem(catalogId);
         try {
             if (quantity <= 0) {
-                item.method = 'DELETE';
+                this.updateCartChanges(item, "DELETE");
                 return;
             }
+
             item.updateAmount = quantity;
-            item.method =  "UPDATE";
+            item.amount = quantity;
+
+            this.updateCartChanges(item, "UPDATE")
         } catch {
             console.error("Item does not exist. Cannot update amount");
         }
@@ -42,10 +78,12 @@ export default class {
             const newAmount = item.amount + quantity;
             if (newAmount > 0) {
                 item.amount = newAmount;
-                item.updateAmount = newAmount;
-                item.method = "UPDATE";
+                item.addAmount === undefined 
+                    ? item.addAmount = quantity
+                    : item.addAmount += quantity;
+                this.updateCartChanges(item, "ADD");
             } else if (newAmount <= 0) {
-                item.method = "DELETE";
+                this.updateCartChanges(item, "DELETE");
             }
         } catch {
             console.error("Item does not exist. Cannot add amount");
@@ -54,7 +92,7 @@ export default class {
 
     deleteItem(catalogId) {
         const item = this.findItem(catalogId);
-        item !== undefined ? item.method = "DELETE" : this.cart.push({catalogId: catalogId, method: "DELETE"});
+        this.updateCartChanges(item, "DELETE");
     }
 
     async getCart() {
@@ -79,28 +117,25 @@ export default class {
     async saveCart() {
         clearTimeout(this.timeout); // Must clear any timeout to prevent double saving
 
-        const saveCart = this.cart.map(item => ({
-            catalogId: item.catalogId,
-            amount: item.updateAmount,
-            method: item.method
-        }));
-
-        const deleteItems = saveCart
-            .filter(item => item.method === "DELETE")
-            .map(item => parseInt(item.catalogId));
-        const addItems = saveCart.filter(item => item.method === "ADD");
-        const updateItems = saveCart.filter(item => item.method === "UPDATE");
-
         const operations = [
-            {items: deleteItems, method: this.deleteFromCart.bind(this)},
-            {items: addItems, method: this.addToCart.bind(this)},
-            {items: updateItems, method: this.updateCart.bind(this)},
+            {items: [...new Set(this.deleteItems)], method: deleteItems => this.deleteFromCart(deleteItems)},
+            {items: [...new Set(this.addItems)], method: addItems => this.addToCart(addItems)},
+            {items: [...new Set(this.updateItems)], method: updateItems => this.updateCart(updateItems)},
         ]
 
         for (const { items, method } of operations) {
             if (items.length === 0) continue;
             await method(items);
         }
+
+        
+        this.cart.forEach(item => {
+            delete item.addAmount;
+            delete item.updateAmount;
+        })
+        this.addItems = [];
+        this.updateItems = [];
+        this.deleteItems = [];
 
         this.cart = await this.getCart();
     }
