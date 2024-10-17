@@ -98,15 +98,15 @@ export default class {
     async getCart() {
         const url = "/cart/get-cart";
         return await fetch(url)
-        .then(res => res.json())
-        .then(data => {
-            this.cart = data;
-            return data;
-        })
-        .catch(err => {
-            console.error(err);
-            throw err;
-        });
+            .then(res => res.json())
+            .then(data => {
+                this.cart = data;
+                return data;
+            })
+            .catch(err => {
+                console.error(err);
+                throw err;
+            });
     }
 
     saveCartTimeout(timeoutDuration) {

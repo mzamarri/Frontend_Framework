@@ -14,7 +14,7 @@ function createItem(name, price, image, description) {
 const generateCatalog = (numOfItems) => {
     let tempItems = [];
     for (let i = 1; i <= numOfItems; i++) {
-        tempItems.push(createItem(`Item ${i}`, i*10, "#", `This is item ${i}`));
+        tempItems.push(createItem(`Item ${i}`, i*10, "", `This is item ${i}`));
     }
     return tempItems;
 }

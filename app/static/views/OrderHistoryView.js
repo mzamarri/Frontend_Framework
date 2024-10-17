@@ -1,82 +1,17 @@
 import AbstractView from "../Modules/Views/AbstractView.js";
+import OrderHistory from "../OrderHistory.js";
 
 export default class extends AbstractView {
     constructor() {
         super();
         super.setTitle("Order History");
-        this.orderHistory = [
-            {
-                id: "123",
-                date: "01/01/2021",
-                totalPrice: 100.00,
-                items: {
-                    "1": {
-                        amount: 1,
-                        item: {
-                            name: "Product 1",
-                            price: 50.00,
-                            imageSrc: "#",
-                            description: "Product 1 description"
-                        }
-                    },
-                    "2": {
-                        amount: 2,
-                        item: {
-                            name: "Product 2",
-                            price: 25.00,
-                            imageSrc: "#",
-                            description: "Product 2 description"
-                        }
-                    }
-                }
-            }, 
-            {
-                id: "456",
-                date: "01/02/2021",
-                totalPrice: 75.00,
-                items: {
-                    "3": {
-                        amount: 1,
-                        item: {
-                            name: "Product 3",
-                            price: 75.00,
-                            imageSrc: "#",
-                            description: "Product 3 description"
-                        }
-                    }
-                }
-            },
-            {
-                id: "657",
-                date: "07/04/2023",
-                totalPrice: 75.00,
-                items: {
-                    "3": {
-                        amount: 1,
-                        item: {
-                            name: "Product 3",
-                            price: 75.00,
-                            imageSrc: "#",
-                            description: "Product 3 description"
-                        }
-                    },
-                    "2": {
-                        amount: 2,
-                        item: {
-                            name: "Product 2",
-                            price: 25.00,
-                            imageSrc: "#",
-                            description: "Product 2 description"
-                        }
-                    }
-                }
-            }
-        ];
+        this.orderHistory = new OrderHistory();
     }
 
-    getHtml() {
+    async getHtml() {
         // const orderHistory = this.loadOrderHistory();
-        let orderHistory = this.orderHistory;
+        const orders = await this.orderHistory.loadOrderHistory();
+        let orderHistory = this.orderHistory.getOrder();
         return `
             <div class="order-history-container">
                 <h1>Order History</h1>

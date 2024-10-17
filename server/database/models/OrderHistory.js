@@ -1,6 +1,7 @@
 const queryDatabase = require('../queryDatabase');
 
 exports = module.exports = class {
+    static activeSessions = {}
 
     /*
     * Adds an order to the order history. The order object should have the following properties:
@@ -19,6 +20,11 @@ exports = module.exports = class {
     *   ]
     * }
     */
+
+    constructor(userId) {
+        this.orders = [];
+        this.userId = userId;
+    }
 
     async addToOrderHistory(order) {
         const query = `
@@ -61,5 +67,10 @@ exports = module.exports = class {
             return res.rows;
         })
         .catch(err => console.error(err));
+    }
+
+    static newSession(sessionId) {
+        this.activeSessions[sessionId] = new this(sessionId);
+        return this.activeSessions[sessionId];
     }
 }

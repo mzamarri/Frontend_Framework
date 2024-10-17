@@ -2,7 +2,7 @@ const express = require('express');
 const path = require('path');
 const session = require('express-session');
 const routes = require('./routes');
-const Cart = require('../server/database/models/Cart');
+const initiateSession = require("./middleware/initiateSession");
 
 const app = express(); 
 
@@ -12,9 +12,7 @@ app.use(session({
     secret: "MySecretVeryVerySecreyKey"
 }));
 
-app.get("/", (req, res) => {
-    const sessionId = req.session.id;
-    if (!(sessionId in Cart.sessionCarts)) Cart.newSession(sessionId);  
+app.get("/", initiateSession, (req, res) => { 
     res.sendFile(path.resolve(__dirname, "../app/index.html"));
 });
 

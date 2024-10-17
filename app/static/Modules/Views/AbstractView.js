@@ -19,6 +19,4 @@ export default class {
         console.log("No event listeners");
         return;
     }
-
-    executeTimeout
 }
