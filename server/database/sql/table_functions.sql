@@ -46,24 +46,28 @@ CREATE OR REPLACE PROCEDURE add_to_order_items(items json) AS $$
 $$ LANGUAGE SQL;
 
 CREATE OR REPLACE PROCEDURE add_to_orders(_order json) AS $$
-    WITH order_results (address, total_price, items) AS (
+    WITH order_results (user_id, address, total_price, items) AS (
         SELECT * FROM json_to_record(_order)
-        AS (address text, "totalPrice" float, items json)
+        AS ("userId" text, address text, "totalPrice" float, items json)
     ), inserted_order AS (
-        INSERT INTO orders (address, total_price) SELECT address, total_price
+        INSERT INTO orders (user_id, address, total_price) 
+        SELECT user_id, address, total_price
         FROM order_results RETURNING order_id
     ), items (catalog_id, amount) AS (
         SELECT * FROM json_to_recordset((SELECT items FROM order_results))
         AS ("catalogId" int, amount int)
     )
-    INSERT INTO order_items (order_id, catalog_id, quantity) SELECT io.order_id, i.catalog_id, i.amount 
+    INSERT INTO order_items (order_id, catalog_id, quantity) 
+    SELECT io.order_id, i.catalog_id, i.amount 
     FROM items i, inserted_order io 
 $$ LANGUAGE SQL;
 
 CREATE OR REPLACE FUNCTION get_order_history() 
 RETURNS TABLE (
     "orderId" int,
+    "userId" text,
     address text,
+    date TIMESTAMP,
     "totalPrice" float,
     items json
 )
@@ -71,13 +75,22 @@ AS $$
     WITH orders AS (
         SELECT * FROM order_history
     )
-    SELECT order_id AS "orderId", address, total_price AS "totalPrice", items FROM order_history;
+    SELECT 
+        order_id AS "orderId", 
+        user_id AS "userId", 
+        address, 
+        purchase_date AS date, 
+        total_price AS "totalPrice", 
+        items 
+    FROM order_history;
 $$ LANGUAGE SQL;
 
 CREATE OR REPLACE FUNCTION get_order_history(limit_amount int)
 RETURNS TABLE (
     "orderId" int,
+    "userId" text,
     address text,
+    date TIMESTAMP,
     "totalPrice" float,
     items json
 )

@@ -2,10 +2,10 @@ const express = require('express');
 
 const router = express.Router();
 
-router.get("/get-orders", (req, res) => {
+router.get("/get-orders", async (req, res) => {
     console.log("Order History endpoint reached...");
-    const orders = 
-    res.json("reached order history endpoint...");
+    const orders = await req.session.orderHistory.getOrderHistory();
+    res.json(orders);
 })
 
 module.exports = router;

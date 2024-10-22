@@ -19,13 +19,13 @@ export default class extends AbstractView {
                     ${orderHistory.map(order => `
                             <div class="order">
                                 <div class="order-summary">
-                                    <h2>Order ID: ${order.id}</h2>
+                                    <h2>Order ID: ${order.userId}</h2>
                                     <h3>Order Date: ${order.date}</h3>
                                     <h3>Order Total: $${order.totalPrice}</h3>
                                 </div>
                                 <div class="order-items">
-                                    ${Object.entries(order.items).map(([id, orderItem]) => `
-                                        <div class="item" data-id="${id}">
+                                    ${Object.entries(order.items).map(([catalogId, orderItem]) => `
+                                        <div class="item" data-id="${catalogId}">
                                             <img src="${orderItem.item.imageSrc}" alt="product photo">
                                             <a href="#">${orderItem.item.name}</a>
                                             <h3>$${orderItem.item.price}</h3>

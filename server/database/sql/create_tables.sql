@@ -4,12 +4,13 @@ CREATE OR REPLACE PROCEDURE create_tables() AS $$
         catalog_id int GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
         name varchar(255) NOT NULL,
         price float NOT NULL,
-        image_src varchar(255) DEFAULT '#',
+        image_src varchar(255) DEFAULT '',
         description varchar(255)
     );
 
     CREATE TABLE IF NOT EXISTS "orders" (
         order_id int GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
+        user_id text,
         address varchar(255),
         total_price float NOT NULL,
         purchase_date TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP
@@ -27,6 +28,7 @@ CREATE OR REPLACE PROCEDURE create_tables() AS $$
     CREATE OR REPLACE VIEW order_history AS
     SELECT
         o.order_id,
+        o.user_id,
         o.address, 
         o.purchase_date, 
         o.total_price,

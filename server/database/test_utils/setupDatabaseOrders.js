@@ -1,7 +1,7 @@
 const queryDatabase = require('../queryDatabase');
 const { randomInt } = require('./utils');
 
-function createOrder(address, totalPrice, items, maxAmount, numOfItems) {
+function createOrder(userId, address, totalPrice, items, maxAmount, numOfItems) {
     let orderItems = [];
     const tempList = [...items];
     for (let i = 0; i < numOfItems; i++) {
@@ -14,6 +14,7 @@ function createOrder(address, totalPrice, items, maxAmount, numOfItems) {
     }
     orderItems.sort((a, b) => a.catalogId - b.catalogId);
     return {
+        userId: userId,
         address: address,
         totalPrice: totalPrice,
         items: orderItems
@@ -28,8 +29,13 @@ const generateOrders = (catalogList, numOfOrders, numOfItems) => {
         "456 boulevard",
         "789 avenue"
     ];
+    const userIds = [
+        "mike50zam",
+        "snipey mike",
+        "migwee"
+    ];
     for (let i = 0; i < numOfOrders; i++) {
-        tempOrders.push(createOrder(address[i % 3], 40.25 * i, catalogList, 8, numOfItems));
+        tempOrders.push(createOrder(userIds[i % 3], address[i % 3], 40.25 * i, catalogList, 8, numOfItems));
     }
     return tempOrders;
 }

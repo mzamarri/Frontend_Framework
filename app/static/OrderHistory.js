@@ -48,7 +48,7 @@ export default class {
     getOrder() {
         return [
             {
-                id: "123",
+                userId: "123",
                 date: "01/01/2021",
                 totalPrice: 100.00,
                 items: {
@@ -73,7 +73,7 @@ export default class {
                 }
             }, 
             {
-                id: "456",
+                userId: "456",
                 date: "01/02/2021",
                 totalPrice: 75.00,
                 items: {
@@ -89,7 +89,7 @@ export default class {
                 }
             },
             {
-                id: "657",
+                userId: "657",
                 date: "07/04/2023",
                 totalPrice: 75.00,
                 items: {

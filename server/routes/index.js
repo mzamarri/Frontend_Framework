@@ -16,13 +16,13 @@ router.use(["/catalog", "/cart"], express.json(), (req, res, next) => {
     next();
 });
 
-router.use("order-history", (req, res, next) => {
+router.use("/order-history", (req, res, next) => {
     const sessionId = req.session.id;
 
     req.session.orderHistory = sessionId in OrderHistory.activeSessions
         ? OrderHistory.activeSessions[sessionId]
         : OrderHistory.newSession(sessionId);
-        next(); 
+        next();
 })
 
 router.use('/catalog', catalogRouter);
