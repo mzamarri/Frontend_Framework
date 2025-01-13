@@ -46,20 +46,22 @@ CREATE OR REPLACE PROCEDURE add_to_order_items(items json) AS $$
 $$ LANGUAGE SQL;
 
 CREATE OR REPLACE PROCEDURE add_to_orders(_order json) AS $$
-    WITH order_results (user_id, address, total_price, items) AS (
+    WITH order_results (user_id, address, items) AS (
         SELECT * FROM json_to_record(_order)
-        AS ("userId" text, address text, "totalPrice" float, items json)
+        AS ("userId" text, address text, items json)
     ), inserted_order AS (
-        INSERT INTO orders (user_id, address, total_price) 
-        SELECT user_id, address, total_price
-        FROM order_results RETURNING order_id
+        INSERT INTO orders (user_id, address) 
+        SELECT user_id, address FROM order_results
+        RETURNING order_id
     ), items (catalog_id, amount) AS (
         SELECT * FROM json_to_recordset((SELECT items FROM order_results))
         AS ("catalogId" int, amount int)
     )
     INSERT INTO order_items (order_id, catalog_id, quantity) 
     SELECT io.order_id, i.catalog_id, i.amount 
-    FROM items i, inserted_order io 
+    FROM items i, inserted_order io;
+
+    DELETE FROM cart WHERE user_id = _order ->> 'userId';
 $$ LANGUAGE SQL;
 
 CREATE OR REPLACE FUNCTION get_order_history() 

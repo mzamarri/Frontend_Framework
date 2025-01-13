@@ -9,36 +9,43 @@ export default class extends AbstractView {
     }
 
     async getHtml() {
-        // const orderHistory = this.loadOrderHistory();
         const orders = await this.orderHistory.loadOrderHistory();
         let orderHistory = this.orderHistory.getOrder();
         return `
             <div class="order-history-container">
                 <h1>Order History</h1>
                 <div class="order-history" id="order-history">
-                    ${orderHistory.map(order => `
-                            <div class="order">
-                                <div class="order-summary">
-                                    <h2>Order ID: ${order.userId}</h2>
-                                    <h3>Order Date: ${order.date}</h3>
-                                    <h3>Order Total: $${order.totalPrice}</h3>
-                                </div>
-                                <div class="order-items">
-                                    ${Object.entries(order.items).map(([catalogId, orderItem]) => `
-                                        <div class="item" data-id="${catalogId}">
-                                            <img src="${orderItem.item.imageSrc}" alt="product photo">
-                                            <a href="#">${orderItem.item.name}</a>
-                                            <h3>$${orderItem.item.price}</h3>
-                                            <h3>Quantity: ${orderItem.amount}</h3>
-                                            <h3>Subtotal: $${orderItem.item.price * orderItem.amount}</h3>
-                                        </div>
-                                    `).join(" ")}
-                                </div>
-                            </div>
-                        `).join(" ")}
+                    ${this.getOrders(orders)}
                 </div>
             </div>
         `
+    }
+
+    getOrders(orders) {
+        return orders.map(order => `
+            <div class="order">
+                <div class="order-summary">
+                    <h2>Order ID: ${order.userId}</h2>
+                    <h3>Order Date: ${order.date}</h3>
+                    <h3>Order Total: $${order.totalPrice}</h3>
+                </div>
+                <div class="order-items">
+                    ${this.getOrderItems(order.items)}
+                </div>
+            </div>
+        `).join(" ");
+    }
+
+    getOrderItems(orderItems) {
+        return orderItems.map(item => `
+            <div class="item" data-id="${item.catalogId}">
+                <img src="${item.imageSrc}" alt="product photo">
+                <a href="#">${item.name}</a>
+                <h3>$${item.price}</h3>
+                <h3>Quantity: ${item.amount}</h3>
+                <h3>Subtotal: $${item.price * item.amount}</h3>
+            </div>
+        `).join(" ");
     }
 
     showItems(event) {

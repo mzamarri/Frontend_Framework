@@ -83,6 +83,7 @@ export default class {
                     : item.addAmount += quantity;
                 this.updateCartChanges(item, "ADD");
             } else if (newAmount <= 0) {
+                item.amount = 0;
                 this.updateCartChanges(item, "DELETE");
             }
         } catch {

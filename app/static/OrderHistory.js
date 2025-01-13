@@ -1,3 +1,5 @@
+import navigateTo from "./Modules/Routing/Router.js";
+
 export default class {
     constructor(cart) {
         this.cart = cart;
@@ -29,8 +31,21 @@ export default class {
         this.saveOrderHistoryToSessionStorage();
     }
 
-    saveOrderHistory() {
-        // sessionStorage.setItem("orderHistory", JSON.stringify(this.orderHistory));
+    async submitOrder(items) {
+        const url = "/order-history/submit-order"
+        return await fetch(url, {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify(items)
+        })
+        .then(res => res.json())
+        .then(data => {
+            alert(data);
+            const url = "/order-history";
+            navigateTo(url);
+        });
     }
 
     async loadOrderHistory() {

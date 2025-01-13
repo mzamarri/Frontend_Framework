@@ -1,5 +1,6 @@
 import navigateTo, { router } from "./Modules/Routing/Router.js";
-import ShoppingCart from "./ShoppingCart.mjs";
+import ShoppingCart from "./ShoppingCart.js";
+import OrderHistory from "./OrderHistory.js"
 
 window.addEventListener("popstate", router);
 
@@ -17,4 +18,5 @@ document.body.addEventListener("click", async e => {
 });
 
 const cart = new ShoppingCart();
-export { cart };
+const orderHistory = new OrderHistory(cart);
+export { cart, orderHistory };

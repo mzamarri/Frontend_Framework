@@ -12,7 +12,6 @@ CREATE OR REPLACE PROCEDURE create_tables() AS $$
         order_id int GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
         user_id text,
         address varchar(255),
-        total_price float NOT NULL,
         purchase_date TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP
     );
 
@@ -31,7 +30,7 @@ CREATE OR REPLACE PROCEDURE create_tables() AS $$
         o.user_id,
         o.address, 
         o.purchase_date, 
-        o.total_price,
+        SUM(oi.quantity * c.price) AS total_price,
         json_agg(json_object(
                 'catalogId': c.catalog_id,
                 'name': c.name,

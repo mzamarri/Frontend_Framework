@@ -26,7 +26,14 @@ exports = module.exports = class {
         this.userId = userId;
     }
 
-    async addToOrderHistory(order) {
+    async submitOrder(items) {
+        
+        const order = {
+            userId: this.userId,
+            address: "123 Ave",
+            items: items
+        }
+
         const query = `
             CALL add_to_orders('${JSON.stringify(order)}');
         `

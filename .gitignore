@@ -1,5 +1,6 @@
 node_modules/
-.env
+.*
 jest.config.js
 coverage
 test_setup.bat
+config

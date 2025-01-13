@@ -16,7 +16,7 @@ app.get("/", initiateSession, (req, res) => {
     res.sendFile(path.resolve(__dirname, "../app/index.html"));
 });
 
-app.use(routes);
+app.use("/api", routes);
 
 app.use("/static", express.static(path.resolve(__dirname, "../app/static/")));
 

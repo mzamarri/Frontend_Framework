@@ -5,5 +5,5 @@ import OrderHistory from "./views/OrderHistoryView.js";
 export default [
     {path: "/", view: Catalog},
     {path: "/cart", view: Cart},
-    {path: "/orderhistory", view: OrderHistory}
+    {path: "/order-history", view: OrderHistory}
 ]
