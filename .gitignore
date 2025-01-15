@@ -1,6 +1,2 @@
 node_modules/
 .*
-jest.config.js
-coverage
-test_setup.bat
-config
