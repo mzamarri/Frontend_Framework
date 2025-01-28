@@ -1,0 +1,43 @@
+services:
+  web:
+    image: nginx-store-spa:latest
+    ports:
+      - "4000:80"
+    volumes:
+      - type: bind
+        source: ./app/config/nginx.conf
+        target: /etc/nginx/nginx.conf
+      - type: bind
+        source: ./app/index.html
+        target: /usr/share/nginx/html/index.html
+      - type: bind
+        source: ./app/static/
+        target: /usr/share/nginx/html/static/
+    depends_on:
+      - backend
+
+  backend:
+    image: store-spa-backend
+    build:
+      context: ./server
+      dockerfile: Dockerfile
+    ports:
+      - "4600:4600"
+    volumes:
+      - type: bind
+        source: ./server/database/
+        target: /usr/src/app/database/
+      - type: bind
+        source: ./server/middleware
+        target: /usr/src/app/middleware
+      - type: bind
+        source: ./server/routes
+        target: /usr/src/app/routes
+      - type: bind
+        source: ./server/server.js
+        target: /usr/src/app/server.js
+      - type: bind
+        source: ./server/package.json
+        target: /usr/src/app/package.json
+    expose:
+      - "4600"

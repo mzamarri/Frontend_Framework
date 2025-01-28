@@ -97,7 +97,7 @@ export default class {
     }
 
     async getCart() {
-        const url = "/cart/get-cart";
+        const url = "/api/cart/get-cart";
         return await fetch(url)
             .then(res => res.json())
             .then(data => {

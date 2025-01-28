@@ -10,7 +10,7 @@ export default class extends AbstractView {
     }
 
     async getHtml() {
-        this.catalog = await fetch('/catalog/get-catalog')
+        this.catalog = await fetch('/api/catalog/get-catalog')
         .then(res => res.json());
 
         let productListHTML = this.createProductList();

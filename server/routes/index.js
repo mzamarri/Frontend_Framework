@@ -7,6 +7,11 @@ const OrderHistory = require("../database/models/OrderHistory");
 
 const router = express.Router();
 
+router.use((req, res, next) => {
+    console.log("/api endpoint called...");
+    next();
+})
+
 router.use(["/catalog", "/cart"], express.json(), (req, res, next) => {
     const sessionId = req.session.id;
     

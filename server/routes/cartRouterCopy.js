@@ -7,7 +7,6 @@ router.use(async (req, res, next) => {
 });
 
 router.get(["/", "/get-cart"], (req, res) => {
-    console.log("get-cart called...")
     const cartItems = req.session.cart.getCart();
     res.json(cartItems);
 });

@@ -1,9 +1,24 @@
 const queryDatabase = require('../queryDatabase');
+const { generateCatalog } = require('../test_utils/setupDatabaseCatalog');
 
 exports = module.exports = class {
 
     constructor() {
-        this.catalog = this.getCatalog();
+        this.catalog = this.init();
+    }
+
+    // Cannot run try-catch block inside constructor, so created a init function
+    // to initiate the value of the constructor
+    async init() {
+        let catalog;
+        try {
+            catalog = await this.getCatalog();
+        } catch {
+            console.log("\n\nStill running...");
+            catalog = generateCatalog(40);
+            console.log("catalog: ", catalog);
+        }
+        return catalog;
     }
 
     async addToCatalog(itemList) {
@@ -45,6 +60,8 @@ exports = module.exports = class {
     }
 
     async getCatalog(offset=0) {
+        console.log("Generating catalog...");
+        return generateCatalog(40);
         const query = `SELECT * FROM get_catalog() LIMIT 500 OFFSET ${500 * offset}`
         return await queryDatabase(query)
         .then(res => {
@@ -52,7 +69,7 @@ exports = module.exports = class {
             return res.rows;
         })
         .catch(err => {
-            console.error("Error getting catalog: ", err);
+            console.error("Error getting catalog: \n\n", err);
             throw err;
         });
     }

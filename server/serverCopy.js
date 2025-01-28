@@ -6,11 +6,6 @@ const initiateSession = require("./middleware/initiateSession");
 
 const app = express();
 
-app.use((req, res, next) => {
-    console.log("Server contacted...");
-    next();
-})
-
 app.use(session({
     resave: true,
     saveUninitialized: true,

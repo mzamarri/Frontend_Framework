@@ -42,9 +42,4 @@ const populateDatabaseCatalog = async (catalogList, returnCatalog=false) => {
     };
 }
 
-async function setupDatabaseCatalog() {
-    const catalog = generateCatalog(30);
-    await populateDatabaseCatalog(catalog);
-}
-
-module.exports = { createItem, generateCatalog, populateDatabaseCatalog, setupDatabaseCatalog }
+module.exports = { createItem, generateCatalog, populateDatabaseCatalog }

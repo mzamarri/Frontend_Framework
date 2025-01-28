@@ -4,3 +4,5 @@ jest.config.js
 coverage
 test_setup.bat
 config
+pg_data
+

@@ -5,7 +5,7 @@ import OrderHistory from "./OrderHistory.js"
 window.addEventListener("popstate", router);
 
 document.addEventListener("DOMContentLoaded", async () => {
-    await cart.getCart();
+    // await cart.getCart();
     router();
 });
 
